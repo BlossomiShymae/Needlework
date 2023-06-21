@@ -47,6 +47,64 @@
               </table>
               <h6>Return value</h6>
             </div>
+            <div v-if="queryParameters.length > 0" class="mb-2">
+              <h6>Query Parameters</h6>
+              <table class="table table-hover">
+                <thead>
+                  <tr class="table-dark">
+                    <th scope="col">Name</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Data Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="parameter in queryParameters">
+                    <th scope="row">
+                      {{ parameter.name }}
+                      <span v-if="parameter.required" class="badge bg-danger"
+                        >Required</span
+                      >
+                    </th>
+                    <td><input v-model="parameter.data" /></td>
+                    <td>
+                      {{ parameter.type }}
+                      <span v-if="parameter.type === 'array'"
+                        >&lt;{{ parameter.items.type }}&gt;</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div v-if="pathParameters.length > 0" class="mb-2">
+              <h6>Path Parameters</h6>
+              <table class="table table-hover">
+                <thead>
+                  <tr class="table-dark">
+                    <th scope="col">Name</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Data Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="parameter in pathParameters">
+                    <th scope="row">
+                      {{ parameter.name }}
+                      <span v-if="parameter.required" class="badge bg-danger"
+                        >Required</span
+                      >
+                    </th>
+                    <td><input v-model="parameter.data" /></td>
+                    <td>
+                      {{ parameter.type }}
+                      <span v-if="parameter.type === 'array'"
+                        >&lt;{{ parameter.items.type }}&gt;</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <hr />
             <div class="d-flex justify-content-start mb-2">
               <button class="btn btn-danger fw-semibold me-2" @click="execute">
@@ -62,10 +120,16 @@
                 Clear
               </button>
             </div>
-            <div v-if="response">
+            <div v-if="requestUrl" class="mb-2">
+              <h6>Request Url</h6>
+              <div class="alert alert-secondary">
+                {{ requestUrl }}
+              </div>
+            </div>
+            <div v-if="responseBody">
               <h6>Response Body</h6>
               <div class="alert alert-secondary">
-                <pre>{{ response }}</pre>
+                <pre>{{ responseBody }}</pre>
               </div>
             </div>
           </div>
@@ -111,23 +175,67 @@ switch (props.method) {
     bgClass = "bg-primary";
     break;
 }
-
 const hash =
   props.method +
   props.path.replace("/", "-").replace("{", "-").replace("}", "-");
+const queryParameters = props.parameters
+  .filter((x) => x.in === "query")
+  .map((x) => {
+    x.data = null;
+    return x;
+  });
+const pathParameters = props.parameters
+  .filter((x) => x.in === "path")
+  .map((x) => {
+    x.data = null;
+    return x;
+  });
 
-const response = ref(null);
+const requestUrl = ref(null);
+const responseBody = ref(null);
 
 async function execute() {
+  let computedPath = props.path;
+  for (const path of pathParameters) {
+    if (path.data != null) {
+      console.log({ in: path.name, data: path.data });
+      computedPath = computedPath.replace(
+        `{${path.name}}`,
+        encodeURIComponent(path.data)
+      );
+    }
+  }
+  let query = "";
+  for (const path of queryParameters) {
+    const char = query.length == 0 ? "?" : "&";
+    if (path.data != null) {
+      query = query + char + path.name + "=" + encodeURIComponent(path.data);
+    }
+  }
+  computedPath += query;
+
   const data: any = await invoke("send_request", {
     method: props.method,
-    path: props.path,
+    path: computedPath,
   });
-  response.value = JSON.stringify(data, null, 2) as any;
-  console.log(response.value);
+  clearParameterData();
+
+  requestUrl.value = computedPath as any;
+  responseBody.value = JSON.stringify(data, null, 2) as any;
 }
 
 async function clear() {
-  response.value = null;
+  clearParameterData();
+  requestUrl.value = null;
+  responseBody.value = null;
+}
+
+function clearParameterData() {
+  for (const parameter of queryParameters) {
+    parameter.data = null;
+  }
+  for (const parameter of pathParameters) {
+    parameter.data = null;
+  }
 }
 </script>

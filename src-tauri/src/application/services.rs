@@ -20,7 +20,7 @@ pub mod lcu_schema_service {
         for (path, operations) in data.unwrap().paths {
             for (method, operation) in operations {
                 let mut plugins: Vec<Plugin> = Vec::new();
-                let mut path_name: String = "".to_string();
+                let mut key_name: String = "".to_string();
                 for tag in operation.tags {
                     let name = tag.to_lowercase();
                     if name.contains("plugins") {
@@ -35,14 +35,16 @@ pub mod lcu_schema_service {
                             response: operation.response.clone(),
                             summary: operation.summary.clone(),
                         });
-                        path_name = name.clone();
+                        key_name = name.clone().split(" ").last().unwrap().into();
                         break;
                     }
                 }
+                if !key_name.contains("lol") {
+                    continue;
+                }
                 let value = endpoints
-                    .get_mut(&path)
+                    .get_mut(&key_name)
                     .map(|endpoint| Endpoint {
-                        name: endpoint.name.clone(),
                         plugins: endpoint
                             .plugins
                             .clone()
@@ -51,10 +53,9 @@ pub mod lcu_schema_service {
                             .collect(),
                     })
                     .unwrap_or(Endpoint {
-                        name: path_name.clone(),
                         plugins: plugins.clone(),
                     });
-                endpoints.insert(path.clone(), value);
+                endpoints.insert(key_name.clone(), value);
             }
         }
 

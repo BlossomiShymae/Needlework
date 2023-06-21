@@ -45,4 +45,5 @@ pub struct Operation {
     pub response: Option<Map<String, Value>>,
     pub summary: Option<String>,
     pub tags: Vec<String>,
+    pub request_body: Option<Map<String, Value>>,
 }

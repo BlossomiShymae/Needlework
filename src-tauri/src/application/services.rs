@@ -45,6 +45,7 @@ pub mod lcu_schema_service {
                             parameters: operation.parameters.clone(),
                             response: operation.response.clone(),
                             summary: operation.summary.clone(),
+                            request_body: operation.request_body.clone(),
                         });
                         key_name = name.clone().split(" ").last().unwrap().into();
                         break;

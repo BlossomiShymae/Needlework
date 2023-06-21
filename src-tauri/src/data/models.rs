@@ -18,4 +18,5 @@ pub struct Plugin {
     pub parameters: Vec<Value>,
     pub response: Option<Map<String, Value>>,
     pub summary: Option<String>,
+    pub request_body: Option<Map<String, Value>>,
 }

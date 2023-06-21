@@ -42,7 +42,7 @@ pub struct Operation {
     pub description: Option<String>,
     pub operation_id: String,
     pub parameters: Vec<Value>,
-    pub response: Option<Map<String, Value>>,
+    pub responses: Option<Map<String, Value>>,
     pub summary: Option<String>,
     pub tags: Vec<String>,
     pub request_body: Option<Map<String, Value>>,

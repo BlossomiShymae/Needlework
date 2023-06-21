@@ -43,7 +43,7 @@ pub mod lcu_schema_service {
                             description: operation.description.clone(),
                             operation_id: operation.operation_id.clone(),
                             parameters: operation.parameters.clone(),
-                            response: operation.response.clone(),
+                            responses: operation.responses.clone(),
                             summary: operation.summary.clone(),
                             request_body: operation.request_body.clone(),
                         });

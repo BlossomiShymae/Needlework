@@ -1,3 +1,69 @@
-* {
-  
+/* Shameless stylesheet reuse from my other projects, >w<  */
+
+:root {
+  --website-header-height: 62px;
+  --color: black;
+  --color-opacity-20: rgb(0, 0, 0, 0.2);
+  --accent-color: rgb(196, 131, 212);
+  --accent-color-opacity-20: rgb(196, 131, 212, 0.2);
+  --accent-color-opacity-50: rgb(196, 131, 212, 0.5);
+  --accent-color-opacity-75: rgb(196, 131, 212, 0.75);
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.hover-dim {
+  background-color: inherit;
+  transition: background-color 250ms;
+}
+
+.hover-dim:hover {
+  background-color: var(--color-opacity-20) !important;
+}
+
+.hover-underline {
+  border-bottom: 1px solid transparent;
+  transition: border-bottom 250ms;
+}
+
+.hover-underline:hover {
+  border-bottom: 1px solid var(--color);
+}
+
+.border-accent {
+  border-top-color: var(--accent-color) !important;
+  border-left-color: var(--accent-color) !important;
+  border-bottom-color: var(--accent-color) !important;
+  border-right-color: var(--accent-color) !important;
+}
+
+.bg-accent {
+  background-color: var(--accent-color);
+}
+
+.bg-accent-20 {
+  background-color: var(--accent-color-opacity-20);
+}
+
+.fs-tiny {
+  font-size: 0.6rem;
+}
+
+.container-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 3fr 9fr;
+}
+
+#aside-parent {
+  display: block;
+  height: calc(100vh - var(--website-header-height));
+  position: sticky;
+  top: var(--website-header-height);
+}
+
+body {
+  padding-right: 0 !important;
 }

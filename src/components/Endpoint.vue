@@ -48,19 +48,25 @@
               <h6>Return value</h6>
             </div>
             <hr />
-            <div class="d-flex justify-content-start">
-              <button class="btn btn-danger fw-semibold me-2">
+            <div class="d-flex justify-content-start mb-2">
+              <button class="btn btn-danger fw-semibold me-2" @click="execute">
                 <span
                   ><PhGearSix weight="duotone" color="white" size="24"
                 /></span>
                 Execute
               </button>
-              <button class="btn btn-secondary fw-semibold me-2">
+              <button class="btn btn-secondary fw-semibold me-2" @click="clear">
                 <span>
                   <PhBroom weight="duotone" color="white" size="24" />
                 </span>
                 Clear
               </button>
+            </div>
+            <div v-if="response">
+              <h6>Response Body</h6>
+              <div class="alert alert-secondary">
+                <pre>{{ response }}</pre>
+              </div>
             </div>
           </div>
         </div>
@@ -70,6 +76,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import { invoke } from "@tauri-apps/api";
 import { PhGearSix, PhBroom } from "@phosphor-icons/vue";
 
 const props = defineProps<{
@@ -107,4 +115,19 @@ switch (props.method) {
 const hash =
   props.method +
   props.path.replace("/", "-").replace("{", "-").replace("}", "-");
+
+const response = ref(null);
+
+async function execute() {
+  const data: any = await invoke("send_request", {
+    method: props.method,
+    path: props.path,
+  });
+  response.value = JSON.stringify(data, null, 2) as any;
+  console.log(response.value);
+}
+
+async function clear() {
+  response.value = null;
+}
 </script>

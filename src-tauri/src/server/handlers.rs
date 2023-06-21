@@ -15,3 +15,9 @@ pub async fn get_endpoints() -> Result<HashMap<String, Endpoint>, String> {
     let data = lcu_schema_service::get_endpoints().await;
     data.map_err(|_err| "Failed to get endpoints!".to_string())
 }
+
+#[tauri::command]
+pub async fn get_endpoint(name: &str) -> Result<Endpoint, String> {
+    let data = lcu_schema_service::get_endpoint(name).await;
+    data.map_err(|_err| "Failed to get endpoint!".to_string())
+}

@@ -11,6 +11,17 @@ pub mod lcu_schema_service {
         data.map(|data| data.info)
     }
 
+    pub async fn get_endpoint(name: &str) -> Result<Endpoint, StandardError> {
+        let data = get_endpoints().await;
+        match data {
+            Ok(v) => match v.get(name) {
+                Some(value) => Ok(value.clone()),
+                None => Err(StandardError),
+            },
+            Err(e) => Err(e),
+        }
+    }
+
     pub async fn get_endpoints() -> Result<HashMap<String, Endpoint>, StandardError> {
         let data = lcu_schema::fetch().await.unwrap();
         if data.is_err() {

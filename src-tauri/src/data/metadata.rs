@@ -41,19 +41,8 @@ pub struct Schema {
 pub struct Operation {
     pub description: Option<String>,
     pub operation_id: String,
-    pub parameters: Vec<Parameter>,
+    pub parameters: Vec<Value>,
     pub response: Option<Map<String, Value>>,
     pub summary: Option<String>,
     pub tags: Vec<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Parameter {
-    #[serde(rename = "in")]
-    pub _in: String,
-    pub name: String,
-    pub required: bool,
-    #[serde(rename = "type")]
-    pub _type: String,
 }

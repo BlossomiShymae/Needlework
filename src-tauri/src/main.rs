@@ -9,7 +9,10 @@ use server::handlers;
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![handlers::get_info])
+        .invoke_handler(tauri::generate_handler![
+            handlers::get_info,
+            handlers::get_endpoints
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

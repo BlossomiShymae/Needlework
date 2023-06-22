@@ -24,7 +24,11 @@ pub async fn get_endpoint(name: &str) -> Result<Endpoint, String> {
 }
 
 #[tauri::command]
-pub async fn send_request(method: &str, path: &str) -> Result<Option<Value>, String> {
-    let data = lcu_service::send_request(method, path).await;
+pub async fn send_request(
+    method: &str,
+    path: &str,
+    body: Option<&str>,
+) -> Result<Option<Value>, String> {
+    let data = lcu_service::send_request(method, path, body).await;
     data.map_err(|_err| "Failed to send request!".to_string())
 }

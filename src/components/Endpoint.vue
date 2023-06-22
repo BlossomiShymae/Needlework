@@ -105,6 +105,14 @@
                 </tbody>
               </table>
             </div>
+            <div v-if="requestBody" class="mb-2">
+              <h6>Request Body</h6>
+              <textarea
+                v-model="jsonBody"
+                class="form-control"
+                rows="3"
+              ></textarea>
+            </div>
             <hr />
             <div class="d-flex justify-content-start mb-2">
               <button class="btn btn-danger fw-semibold me-2" @click="execute">
@@ -192,6 +200,7 @@ const pathParameters = props.parameters
   });
 
 const requestUrl = ref(null);
+const jsonBody = ref(undefined);
 const responseBody = ref(null);
 
 async function execute() {
@@ -214,11 +223,16 @@ async function execute() {
   }
   computedPath += query;
 
+  console.log(JSON.stringify(jsonBody.value));
+
   const data: any = await invoke("send_request", {
     method: props.method,
     path: computedPath,
+    body:
+      jsonBody.value != null
+        ? JSON.stringify(JSON.parse(jsonBody.value))
+        : null,
   });
-  clearParameterData();
 
   requestUrl.value = computedPath as any;
   responseBody.value = JSON.stringify(data, null, 2) as any;
@@ -228,6 +242,7 @@ async function clear() {
   clearParameterData();
   requestUrl.value = null;
   responseBody.value = null;
+  jsonBody.value = undefined;
 }
 
 function clearParameterData() {

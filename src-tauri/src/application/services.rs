@@ -78,15 +78,30 @@ pub mod lcu_schema_service {
 pub mod lcu_service {
     use irelia::{rest::LCUClient, RequestClient};
     use serde_json::Value;
+    use tap::prelude::*;
 
     use crate::data::types::StandardError;
 
-    pub async fn send_request(method: &str, path: &str) -> Result<Option<Value>, StandardError> {
+    pub async fn send_request(
+        method: &str,
+        path: &str,
+        body: Option<&str>,
+    ) -> Result<Option<Value>, StandardError> {
         let client = RequestClient::new();
         let lcu_client = LCUClient::new(&client).unwrap();
         let data = match method {
             "get" => lcu_client
                 .get::<Value>(path)
+                .await
+                .map_err(|_err| StandardError),
+            "post" => lcu_client
+                .post::<Value, Value>(
+                    path,
+                    body.map(|some| {
+                        let json: Value = serde_json::from_str(some).unwrap();
+                        json.tap(|v| println!("Data: {:?}", v))
+                    }),
+                )
                 .await
                 .map_err(|_err| StandardError),
             _ => Err(StandardError),

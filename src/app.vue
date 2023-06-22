@@ -48,7 +48,10 @@
           </ul>
         </nav>
       </aside>
-      <article id="main-content" class="order-1 grid-content ps-4 pb-4">
+      <article
+        id="main-content"
+        class="order-1 grid-content ps-4 pb-4 overflow-x-hidden"
+      >
         <NuxtPage />
       </article>
     </main>

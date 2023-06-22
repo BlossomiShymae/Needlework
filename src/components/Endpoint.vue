@@ -136,11 +136,72 @@
             </div>
             <div v-if="responseBody">
               <h6>Response Body</h6>
-              <div class="alert alert-secondary">
-                <pre>{{ responseBody }}</pre>
+              <div class="alert alert-secondary overflow-auto mb-1">
+                <pre style="max-height: 400px">{{ responseBody }}</pre>
+                <hr />
+                <div class="d-flex justify-content-end">
+                  <button
+                    class="btn btn-secondary ms-2"
+                    @click="copyToClipboard"
+                  >
+                    <span
+                      ><PhClipboard weight="duotone" color="white" side="24"
+                    /></span>
+                    Copy
+                  </button>
+                  <button
+                    class="btn btn-secondary ms-2"
+                    @click="expandResponseBody"
+                    :data-bs-target="`#modal-${hash}`"
+                    data-bs-toggle="modal"
+                  >
+                    <span
+                      ><PhArrowsOut weight="duotone" color="white" side="24" />
+                    </span>
+                    Expand
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    tabindex="-1"
+    :id="`modal-${hash}`"
+    style="z-index: 10000"
+  >
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Response Body</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-secondary">
+            <pre>{{ responseBody }}</pre>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="copyToClipboard">
+            <span
+              ><PhClipboard weight="duotone" color="white" side="24"
+            /></span>
+            Copy
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            <span>
+              <PhX weight="duotone" color="white" side="24" />
+            </span>
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -150,7 +211,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { invoke } from "@tauri-apps/api";
-import { PhGearSix, PhBroom } from "@phosphor-icons/vue";
+import { writeText } from "@tauri-apps/api/clipboard";
+import {
+  PhGearSix,
+  PhBroom,
+  PhClipboard,
+  PhArrowsOut,
+  PhX,
+} from "@phosphor-icons/vue";
 
 const props = defineProps<{
   method: string;
@@ -244,6 +312,12 @@ async function clear() {
   responseBody.value = null;
   jsonBody.value = undefined;
 }
+
+async function copyToClipboard() {
+  await writeText(`${responseBody.value}`);
+}
+
+function expandResponseBody() {}
 
 function clearParameterData() {
   for (const parameter of queryParameters) {

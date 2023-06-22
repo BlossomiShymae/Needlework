@@ -6,8 +6,8 @@
     >
       <div class="grid-aside w-100">
         <div class="d-flex align-content-center align-items-center w-100">
-          <div class="img-fluid img-thumbnail me-2">
-            <img src="/favicon.png" width="32" height="32" />
+          <div class="img-fluid me-2">
+            <img src="/favicon.png" class="rounded" width="32" height="32" />
           </div>
           <h4 class="fw-light">LCU Infiltrator</h4>
         </div>

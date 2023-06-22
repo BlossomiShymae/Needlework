@@ -1,9 +1,11 @@
 use serde_json::Value;
 use std::collections::HashMap;
+use tauri::State;
 
 use crate::application::services::{lcu_schema_service, lcu_service};
 use crate::data::metadata::Info;
 use crate::data::models::Endpoint;
+use crate::Data;
 
 #[tauri::command]
 pub async fn get_info() -> Result<Info, String> {
@@ -12,14 +14,14 @@ pub async fn get_info() -> Result<Info, String> {
 }
 
 #[tauri::command]
-pub async fn get_endpoints() -> Result<HashMap<String, Endpoint>, String> {
-    let data = lcu_schema_service::get_endpoints().await;
+pub async fn get_endpoints(data_bus: State<'_, Data>) -> Result<HashMap<String, Endpoint>, String> {
+    let data = lcu_schema_service::get_endpoints(data_bus).await;
     data.map_err(|_err| "Failed to get endpoints!".to_string())
 }
 
 #[tauri::command]
-pub async fn get_endpoint(name: &str) -> Result<Endpoint, String> {
-    let data = lcu_schema_service::get_endpoint(name).await;
+pub async fn get_endpoint(name: &str, data_bus: State<'_, Data>) -> Result<Endpoint, String> {
+    let data = lcu_schema_service::get_endpoint(name, data_bus).await;
     data.map_err(|_err| "Failed to get endpoint!".to_string())
 }
 

@@ -1,18 +1,24 @@
 pub mod lcu_schema_service {
     use std::collections::HashMap;
 
+    use tauri::State;
+
     use crate::data::apis::lcu_schema;
     use crate::data::metadata::Info;
     use crate::data::models::{Endpoint, Plugin};
     use crate::data::types::StandardError;
+    use crate::Data;
 
     pub async fn get_info() -> Result<Info, StandardError> {
         let data = lcu_schema::fetch().await.unwrap();
         data.map(|data| data.info)
     }
 
-    pub async fn get_endpoint(name: &str) -> Result<Endpoint, StandardError> {
-        let data = get_endpoints().await;
+    pub async fn get_endpoint(
+        name: &str,
+        state: State<'_, Data>,
+    ) -> Result<Endpoint, StandardError> {
+        let data = get_endpoints(state).await;
         match data {
             Ok(v) => match v.get(name) {
                 Some(value) => Ok(value.clone()),
@@ -22,7 +28,18 @@ pub mod lcu_schema_service {
         }
     }
 
-    pub async fn get_endpoints() -> Result<HashMap<String, Endpoint>, StandardError> {
+    pub async fn get_endpoints(
+        state: State<'_, Data>,
+    ) -> Result<HashMap<String, Endpoint>, StandardError> {
+        {
+            let _endpoints = state.endpoints.lock().await;
+            if _endpoints.len() > 0 {
+                println!("Using cached endpoints...");
+                return Ok(_endpoints.clone());
+            }
+        }
+        println!("Fetching new endpoints...");
+
         let data = lcu_schema::fetch().await.unwrap();
         if data.is_err() {
             return Err(data.unwrap_err());
@@ -71,6 +88,14 @@ pub mod lcu_schema_service {
             }
         }
 
+        {
+            println!("Accessing state under mutex...");
+            let mut _endpoints = state.endpoints.lock().await;
+            println!("Holding lock...");
+            *_endpoints = endpoints.clone();
+            println!("End");
+        }
+        println!("Returning endpoints...");
         Ok(endpoints)
     }
 }

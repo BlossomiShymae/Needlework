@@ -95,17 +95,32 @@ pub mod lcu_service {
                 .await
                 .map_err(|_err| StandardError),
             "post" => lcu_client
-                .post::<Value, Value>(
-                    path,
-                    body.map(|some| {
-                        let json: Value = serde_json::from_str(some).unwrap();
-                        json.tap(|v| println!("Data: {:?}", v))
-                    }),
-                )
+                .post::<Value, Value>(path, body.map(deserialize))
+                .await
+                .map_err(|_err| StandardError),
+            "put" => lcu_client
+                .put::<Value, Value>(path, body.map(deserialize))
+                .await
+                .map_err(|_err| StandardError),
+            "delete" => lcu_client
+                .delete::<Value>(path)
+                .await
+                .map_err(|_err| StandardError),
+            "patch" => lcu_client
+                .patch::<Value, Value>(path, body.map(deserialize))
+                .await
+                .map_err(|_err| StandardError),
+            "head" => lcu_client
+                .head::<Value>(path)
                 .await
                 .map_err(|_err| StandardError),
             _ => Err(StandardError),
         };
         data
+    }
+
+    fn deserialize(stream: &str) -> Value {
+        let data: Value = serde_json::from_str(stream).unwrap();
+        data.tap(|v| println!("Data: {:?}", v))
     }
 }

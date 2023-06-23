@@ -130,10 +130,11 @@
                     </th>
                     <td><input v-model="parameter.data" /></td>
                     <td>
-                      {{ parameter.type }}
-                      <span v-if="parameter.type === 'array'"
-                        >&lt;{{ parameter.items.type }}&gt;</span
-                      >
+                      {{
+                        parameter.type === "array"
+                          ? `${parameter.type}[]`
+                          : parameter.type
+                      }}
                     </td>
                   </tr>
                 </tbody>
@@ -159,10 +160,11 @@
                     </th>
                     <td><input v-model="parameter.data" /></td>
                     <td>
-                      {{ parameter.type }}
-                      <span v-if="parameter.type === 'array'"
-                        >&lt;{{ parameter.items.type }}&gt;</span
-                      >
+                      {{
+                        parameter.type === "array"
+                          ? `${parameter.type}[]`
+                          : parameter.type
+                      }}
                     </td>
                   </tr>
                 </tbody>
@@ -362,7 +364,7 @@ if (props.responses != null) {
       if (type === "array") {
         const ref = schema.items.$ref;
         returnKey = ref;
-        key = ref + "[]";
+        if (ref != null) key = ref + "[]";
       } else {
         const ref = schema.properties?.$ref ?? schema.additionalProperties.$ref;
         returnKey = ref;

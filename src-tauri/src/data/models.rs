@@ -20,3 +20,16 @@ pub struct Plugin {
     pub summary: Option<String>,
     pub request_body: Option<Map<String, Value>>,
 }
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Schema {
+    pub name: String,
+    pub description: Option<String>,
+    pub properties: Option<Map<String, Value>>,
+    #[serde(rename = "enum")]
+    pub _enum: Option<Vec<String>>,
+    #[serde(rename = "type")]
+    pub _type: String,
+    pub schema_ids: Vec<String>,
+}

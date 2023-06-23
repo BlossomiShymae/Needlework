@@ -1,11 +1,12 @@
 pub mod lcu_schema_service {
     use std::collections::HashMap;
 
+    use serde_json::{json, Map, Value};
     use tauri::State;
 
     use crate::data::apis::lcu_schema;
     use crate::data::metadata::Info;
-    use crate::data::models::{Endpoint, Plugin};
+    use crate::data::models::{Endpoint, Plugin, Schema};
     use crate::data::types::StandardError;
     use crate::Data;
 
@@ -97,6 +98,97 @@ pub mod lcu_schema_service {
         }
         println!("Returning endpoints...");
         Ok(endpoints)
+    }
+
+    pub async fn get_schema(name: &str, state: State<'_, Data>) -> Result<Schema, StandardError> {
+        let data = get_schemas(state).await;
+        match data {
+            Ok(v) => match v.get(name) {
+                Some(value) => Ok(value.clone()),
+                None => Err(StandardError),
+            },
+            Err(e) => Err(e),
+        }
+    }
+
+    pub async fn get_schemas(
+        state: State<'_, Data>,
+    ) -> Result<HashMap<String, Schema>, StandardError> {
+        {
+            let _schemas = state.schemas.lock().await;
+            if _schemas.len() > 0 {
+                return Ok(_schemas.clone());
+            }
+        }
+
+        let data = lcu_schema::fetch().await.unwrap();
+        if data.is_err() {
+            return Err(data.unwrap_err());
+        }
+        let mut schemas: HashMap<String, Schema> = HashMap::new();
+        for (k, schema) in data.unwrap().components.schemas {
+            let mut schema_clone = schema.clone();
+            // Scan for all descendent schemas for object-type schemas
+            let mut schema_ids: Vec<String> = Vec::new();
+            if schema_clone._type.eq("object") {
+                // Scan properties for possible schemas
+                let properties = schema_clone.properties.as_mut().unwrap();
+                for (_property_name, property) in properties {
+                    let property_ref: &mut Map<String, Value> = property.as_object_mut().unwrap();
+                    let mut is_schema_ref = false;
+                    let mut is_array = false;
+                    let mut type_value: Value = json!("");
+                    property_ref.get_mut("$ref").map(|v| {
+                        let schema_id = v.as_str().unwrap().to_string();
+                        schema_ids.push(schema_id.clone());
+                        type_value = json!(schema_id.replace("#/components/schemas/", ""));
+                        is_schema_ref = true;
+                    });
+                    property_ref.get("type").map(|v| {
+                        let _type = v.as_str().unwrap();
+                        if _type.eq("array") {
+                            let mut parameter_type = "";
+                            property_ref.get("items").map(|v| {
+                                let items: &Map<String, Value> = v.as_object().unwrap();
+                                items.get("$ref").map(|v| {
+                                    parameter_type = v.as_str().clone().unwrap();
+                                });
+                                items.get("type").map(|v| {
+                                    parameter_type = v.as_str().clone().unwrap();
+                                });
+                            });
+                            type_value = json!("x[]".replace(
+                                "x",
+                                parameter_type.replace("#/components/schemas/", "").as_str()
+                            ));
+                            is_array = true;
+                        }
+                    });
+
+                    if is_schema_ref || is_array {
+                        property_ref.insert("type".into(), type_value);
+                    }
+                }
+            }
+            schemas.insert(
+                ["#/components/schemas/", k.clone().as_str()].concat(),
+                Schema {
+                    name: k,
+                    description: schema_clone.description,
+                    properties: schema_clone.properties,
+                    _enum: schema_clone._enum,
+                    _type: schema_clone._type,
+                    schema_ids: schema_ids.clone(),
+                },
+            );
+        }
+
+        {
+            let mut _schemas = state.schemas.lock().await;
+            *_schemas = schemas.clone();
+        }
+
+        Ok(schemas)
     }
 }
 

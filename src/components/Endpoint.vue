@@ -29,7 +29,71 @@
               <h6>Description</h6>
               <p>{{ description }}</p>
             </div>
+            <div v-if="requestSchemas.length > 0" class="mb-2">
+              <h6>Request Classes</h6>
+              <div
+                v-for="schema in requestSchemas"
+                class="mb-1 border-start border-accent border-4 ps-2"
+              >
+                <p class="fw-bold">{{ schema.name }}</p>
+                <table class="table table-hover">
+                  <thead>
+                    <tr class="table-dark">
+                      <th scope="col">Name</th>
+                      <th scope="col">Type</th>
+                    </tr>
+                  </thead>
+                  <tbody v-if="schema.type === 'object'">
+                    <tr v-for="(property, name, index) in schema.properties">
+                      <th scope="row">{{ name }}</th>
+                      <td>{{ property.type }}</td>
+                    </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <tr>
+                      <th scope="row">{{ schema.enum }}</th>
+                      <td>Enum</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
             <div v-if="responses" class="mb-2">
+              <div class="alert alert-info">
+                <h6>
+                  Return value:
+                  <span class="font-monospace">{{ returnType ?? "None" }}</span>
+                </h6>
+              </div>
+              <div v-if="responseSchemas.length > 0" class="mb-2">
+                <h6>Response Classes</h6>
+                <div
+                  v-for="schema in responseSchemas"
+                  class="mb-1 border-start border-accent border-4 ps-2"
+                >
+                  <p class="fw-bold">{{ schema.name }}</p>
+                  <table class="table table-hover">
+                    <thead>
+                      <tr class="table-dark">
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="schema.type === 'object'">
+                      <tr v-for="(property, name, index) in schema.properties">
+                        <th scope="row">{{ name }}</th>
+                        <td>{{ property.type }}</td>
+                      </tr>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <th scope="row">{{ schema.enum }}</th>
+                        <td>Enum</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
               <h6>Responses</h6>
               <table class="table table-hover">
                 <thead>
@@ -45,7 +109,6 @@
                   </tr>
                 </tbody>
               </table>
-              <h6>Return value</h6>
             </div>
             <div v-if="queryParameters.length > 0" class="mb-2">
               <h6>Query Parameters</h6>
@@ -266,6 +329,63 @@ const pathParameters = props.parameters
     x.data = null;
     return x;
   });
+
+let requestSchemas: any[] = [];
+if (props.requestBody != null) {
+  let key = props.requestBody.content["application/json"].schema.$ref;
+  if (key != null) {
+    let schema = (await invoke("get_schema", { name: key })) as any;
+    schema.name = key.replace("#/components/schemas/", "");
+
+    if (schema.type === "object") {
+      for (const [k, v] of Object.entries(schema.properties)) {
+        const ref = (v as any).$ref;
+        const type = (v as any).type;
+        if (ref != null) {
+          const targetType = ref.replace("#/components/schemas/", "");
+          schema.properties[k].type = targetType;
+        }
+      }
+    }
+    requestSchemas.push(schema);
+  }
+}
+
+let returnType: any = null;
+let returnKey: any = null;
+if (props.responses != null) {
+  if (props.responses["200"] != null) {
+    const schema = props.responses["200"].content["application/json"].schema;
+    const type = schema.type;
+    let key = null;
+    if (type === "array" || type === "object") {
+      if (type === "array") {
+        const ref = schema.items.$ref;
+        returnKey = ref;
+        key = ref + "[]";
+      } else {
+        const ref = schema.properties?.$ref ?? schema.additionalProperties.$ref;
+        returnKey = ref;
+        key = ref;
+      }
+    } else if (schema.$ref != null) {
+      const ref = schema.$ref;
+      returnKey = ref;
+      key = ref;
+    }
+
+    if (key != null) {
+      returnType = key.replace("#/components/schemas/", "");
+    } else {
+      returnType = type;
+    }
+  }
+}
+let responseSchemas: any[] = [];
+if (returnKey != null) {
+  let schema = (await invoke("get_schema", { name: returnKey })) as any;
+  responseSchemas.push(schema);
+}
 
 const requestUrl = ref(null);
 const jsonBody = ref(undefined);

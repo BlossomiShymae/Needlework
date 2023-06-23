@@ -32,6 +32,8 @@ pub struct Components {
 pub struct Schema {
     pub description: Option<String>,
     pub properties: Option<Map<String, Value>>,
+    #[serde(rename = "enum")]
+    pub _enum: Option<Vec<String>>,
     #[serde(rename = "type")]
     pub _type: String,
 }

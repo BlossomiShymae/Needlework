@@ -9,7 +9,18 @@
           <div class="img-fluid me-2">
             <img src="/favicon.png" class="rounded" width="32" height="32" />
           </div>
-          <h4 class="m-0 p-0"><ApplicationTitle /></h4>
+          <NuxtLink
+            class="btn rounded text-decoration-none hover-dim me-2"
+            to="/"
+          >
+            <PhHouse weight="fill" color="black" size="24" />
+          </NuxtLink>
+          <NuxtLink
+            class="btn rounded text-decoration-none hover-dim me-2"
+            to="/schemas"
+          >
+            <PhFiles weight="fill" color="black" size="24" />
+          </NuxtLink>
         </div>
       </div>
       <div class="grid-content ps-4 w-100">
@@ -27,7 +38,7 @@
       <aside id="aside-parent">
         <nav
           id="aside-navbar"
-          class="sticky-top overflow-y-auto h-100 d-flex flex-column p-3"
+          class="sticky-top overflow-y-auto h-100 d-flex flex-column p-3 pt-0"
         >
           <ul class="mb-2 list-unstyled flex-column">
             <!-- Plugin endpoints -->
@@ -91,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhGithubLogo } from "@phosphor-icons/vue";
+import { PhFiles, PhGithubLogo, PhHouse } from "@phosphor-icons/vue";
 import { invoke } from "@tauri-apps/api";
 
 const endpoints = await invoke("get_endpoints");

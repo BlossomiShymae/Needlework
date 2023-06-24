@@ -38,6 +38,12 @@ pub async fn get_schema(name: &str, state: State<'_, Data>) -> Result<Schema, St
 }
 
 #[tauri::command]
+pub async fn get_schemas(state: State<'_, Data>) -> Result<HashMap<String, Schema>, String> {
+    let data = lcu_schema_service::get_schemas(state).await;
+    data.map_err(|e| e.message)
+}
+
+#[tauri::command]
 pub async fn send_request(
     method: &str,
     path: &str,

@@ -15,6 +15,12 @@
           >
             <PhHouse weight="fill" color="black" size="24" />
           </NuxtLink>
+          <NuxtLink
+            class="btn rounded text-decoration-none hover-dim me-2"
+            to="/console"
+          >
+            <PhTerminal weight="fill" color="black" size="24" />
+          </NuxtLink>
           <button
             class="btn rounded text-decoration-none hover-dim me-2"
             @click="openSchemasWindow"
@@ -103,7 +109,12 @@
 
 <script setup>
 // Cannot use lang="ts" here for some reason...
-import { PhFiles, PhGithubLogo, PhHouse } from "@phosphor-icons/vue";
+import {
+  PhFiles,
+  PhGithubLogo,
+  PhHouse,
+  PhTerminal,
+} from "@phosphor-icons/vue";
 import { invoke } from "@tauri-apps/api";
 import { WebviewWindow } from "@tauri-apps/api/window";
 

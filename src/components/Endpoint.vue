@@ -392,22 +392,25 @@ const pathParameters = props.parameters
 
 let requestSchemas: any[] = [];
 if (props.requestBody != null) {
-  let key = props.requestBody.content["application/json"].schema.$ref;
-  if (key != null) {
-    let schema = (await invoke("get_schema", { name: key })) as any;
-    schema.name = key.replace("#/components/schemas/", "");
+  const _schema = props.requestBody.content["application/json"]?.schema ?? null;
+  if (_schema != null) {
+    let key = _schema.$ref;
+    if (key != null) {
+      let schema = (await invoke("get_schema", { name: key })) as any;
+      schema.name = key.replace("#/components/schemas/", "");
 
-    if (schema.type === "object") {
-      for (const [k, v] of Object.entries(schema.properties)) {
-        const ref = (v as any).$ref;
-        const type = (v as any).type;
-        if (ref != null) {
-          const targetType = ref.replace("#/components/schemas/", "");
-          schema.properties[k].type = targetType;
+      if (schema.type === "object") {
+        for (const [k, v] of Object.entries(schema.properties)) {
+          const ref = (v as any).$ref;
+          const type = (v as any).type;
+          if (ref != null) {
+            const targetType = ref.replace("#/components/schemas/", "");
+            schema.properties[k].type = targetType;
+          }
         }
       }
+      requestSchemas.push(schema);
     }
-    requestSchemas.push(schema);
   }
 }
 

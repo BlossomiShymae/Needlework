@@ -20,7 +20,7 @@ tauri-build = { version = "1.4.0", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.4.0", features = [ "shell-open", "clipboard-write-text"] }
+tauri = { version = "1.4.0", features = [ "window-create", "shell-open", "clipboard-write-text"] }
 tokio = { version = "1.28.2", features = ["full"] }
 hyper = { version = "0.14", features = ["full"] }
 hyper-tls = "0.5.0"

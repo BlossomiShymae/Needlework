@@ -18,4 +18,8 @@
 import { invoke } from "@tauri-apps/api";
 
 const schemas = (await invoke("get_schemas")) as any;
+
+definePageMeta({
+  layout: "window",
+});
 </script>

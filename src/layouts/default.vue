@@ -13,15 +13,13 @@
             class="btn rounded text-decoration-none hover-dim me-2"
             to="/"
           >
-            <PhHouse weight="fill" color="black" size="24" class="me-1" />
-            Home
+            <PhHouse weight="fill" color="black" size="24" />
           </NuxtLink>
           <button
             class="btn rounded text-decoration-none hover-dim me-2"
             @click="openSchemasWindow"
           >
-            <PhFiles weight="fill" color="black" size="24" class="me-1" />
-            Schemas
+            <PhFiles weight="fill" color="black" size="24" />
           </button>
         </div>
       </div>

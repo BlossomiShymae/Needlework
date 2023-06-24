@@ -48,7 +48,8 @@
           A Swagger-like UI is provided to interact with available endpoints.
         </p>
         <p class="text-secondary">
-          Schemas for requests and responses can be accessed in the topbar.
+          Schemas for requests and responses can be accessed in the top-left
+          corner.
         </p>
       </div>
     </div>

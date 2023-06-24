@@ -23,7 +23,9 @@ pub mod lcu_schema_service {
         match data {
             Ok(v) => match v.get(name) {
                 Some(value) => Ok(value.clone()),
-                None => Err(StandardError),
+                None => Err(StandardError::new(
+                    format!("Invalid endpoint key: {}", name).as_str(),
+                )),
             },
             Err(e) => Err(e),
         }
@@ -35,11 +37,9 @@ pub mod lcu_schema_service {
         {
             let _endpoints = state.endpoints.lock().await;
             if _endpoints.len() > 0 {
-                println!("Using cached endpoints...");
                 return Ok(_endpoints.clone());
             }
         }
-        println!("Fetching new endpoints...");
 
         let data = lcu_schema::fetch().await.unwrap();
         if data.is_err() {
@@ -105,7 +105,9 @@ pub mod lcu_schema_service {
         match data {
             Ok(v) => match v.get(name) {
                 Some(value) => Ok(value.clone()),
-                None => Err(StandardError),
+                None => Err(StandardError::new(
+                    format!("Invalid schema key: {}", name).as_str(),
+                )),
             },
             Err(e) => Err(e),
         }
@@ -205,35 +207,36 @@ pub mod lcu_service {
         body: Option<&str>,
     ) -> Result<Option<Value>, StandardError> {
         let client = RequestClient::new();
-        let lcu_client = LCUClient::new(&client).unwrap();
-        let data = match method {
-            "get" => lcu_client
-                .get::<Value>(path)
-                .await
-                .map_err(|_err| StandardError),
-            "post" => lcu_client
-                .post::<Value, Value>(path, body.map(deserialize))
-                .await
-                .map_err(|_err| StandardError),
-            "put" => lcu_client
-                .put::<Value, Value>(path, body.map(deserialize))
-                .await
-                .map_err(|_err| StandardError),
-            "delete" => lcu_client
-                .delete::<Value>(path)
-                .await
-                .map_err(|_err| StandardError),
-            "patch" => lcu_client
-                .patch::<Value, Value>(path, body.map(deserialize))
-                .await
-                .map_err(|_err| StandardError),
-            "head" => lcu_client
-                .head::<Value>(path)
-                .await
-                .map_err(|_err| StandardError),
-            _ => Err(StandardError),
-        };
-        data
+        match LCUClient::new(&client) {
+            Ok(lcu_client) => match method {
+                "get" => lcu_client
+                    .get::<Value>(path)
+                    .await
+                    .map_err(StandardError::from_lcu_error),
+                "post" => lcu_client
+                    .post::<Value, Value>(path, body.map(deserialize))
+                    .await
+                    .map_err(StandardError::from_lcu_error),
+                "put" => lcu_client
+                    .put::<Value, Value>(path, body.map(deserialize))
+                    .await
+                    .map_err(StandardError::from_lcu_error),
+                "delete" => lcu_client
+                    .delete::<Value>(path)
+                    .await
+                    .map_err(StandardError::from_lcu_error),
+                "patch" => lcu_client
+                    .patch::<Value, Value>(path, body.map(deserialize))
+                    .await
+                    .map_err(StandardError::from_lcu_error),
+                "head" => lcu_client
+                    .head::<Value>(path)
+                    .await
+                    .map_err(StandardError::from_lcu_error),
+                _ => Err(StandardError::new("Invalid method operation")),
+            },
+            Err(e) => Err(StandardError::from_lcu_error(e)),
+        }
     }
 
     fn deserialize(stream: &str) -> Value {

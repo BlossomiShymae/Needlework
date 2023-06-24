@@ -197,6 +197,23 @@
                 Clear
               </button>
             </div>
+            <div
+              v-if="errorMessage"
+              class="alert alert-danger border-start rounded-0 border-danger border-4 border-0 mb-2"
+            >
+              <p
+                class="fw-bold m-0 mb-1 border-bottom border-1 border-danger-subtle pb-2"
+              >
+                <span
+                  ><PhWarningCircle
+                    weight="fill"
+                    color="#800"
+                    size="24"
+                    class="me-2" /></span
+                >Error
+              </p>
+              <p class="m-0 font-monospace">{{ errorMessage }}</p>
+            </div>
             <div v-if="requestUrl" class="mb-2">
               <h6>Request Url</h6>
               <div class="alert alert-secondary">
@@ -286,6 +303,7 @@ import {
   PhBroom,
   PhClipboard,
   PhArrowsOut,
+  PhWarningCircle,
   PhX,
 } from "@phosphor-icons/vue";
 
@@ -393,11 +411,13 @@ if (returnKey != null) {
   responseSchemas.push(schema);
 }
 
+const errorMessage = ref(null);
 const requestUrl = ref(null);
 const jsonBody = ref(undefined);
 const responseBody = ref(null);
 
 async function execute() {
+  clearMessageData();
   let computedPath = props.path;
   for (const path of pathParameters) {
     if (path.data != null) {
@@ -419,24 +439,27 @@ async function execute() {
 
   console.log(JSON.stringify(jsonBody.value));
 
-  const data: any = await invoke("send_request", {
-    method: props.method,
-    path: computedPath,
-    body:
-      jsonBody.value != null
-        ? JSON.stringify(JSON.parse(jsonBody.value))
-        : null,
-  });
+  // Send a request to the LCU! 💚
+  try {
+    const data: any = await invoke("send_request", {
+      method: props.method,
+      path: computedPath,
+      body:
+        jsonBody.value != null
+          ? JSON.stringify(JSON.parse(jsonBody.value))
+          : null,
+    });
 
-  requestUrl.value = computedPath as any;
-  responseBody.value = JSON.stringify(data, null, 2) as any;
+    requestUrl.value = computedPath as any;
+    responseBody.value = JSON.stringify(data, null, 2) as any;
+  } catch (e: any) {
+    errorMessage.value = e;
+  }
 }
 
 async function clear() {
   clearParameterData();
-  requestUrl.value = null;
-  responseBody.value = null;
-  jsonBody.value = undefined;
+  clearMessageData();
 }
 
 async function copyToClipboard() {
@@ -452,5 +475,12 @@ function clearParameterData() {
   for (const parameter of pathParameters) {
     parameter.data = null;
   }
+}
+
+function clearMessageData() {
+  requestUrl.value = null;
+  responseBody.value = null;
+  jsonBody.value = undefined;
+  errorMessage.value = null;
 }
 </script>

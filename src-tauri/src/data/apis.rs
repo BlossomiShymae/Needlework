@@ -12,7 +12,9 @@ pub mod lcu_schema {
         let res = client.get(uri).await?;
 
         if !res.status().is_success() {
-            return Ok(Err(StandardError));
+            return Ok(Err(StandardError::new(
+                format!("Response not success: {}", res.status()).as_str(),
+            )));
         }
 
         let bytes = body::to_bytes(res.into_body()).await?;

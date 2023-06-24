@@ -3,15 +3,19 @@
     <div class="accordion-item">
       <h2 class="accordion-header" :id="`flush-heading-${hash}`">
         <button
-          class="accordion-button collapsed"
+          class="accordion-button collapsed p-0 pe-2"
           type="button"
           data-bs-toggle="collapse"
           :data-bs-target="`#flush-collapse-${hash}`"
         >
-          <span :class="`badge ${bgClass} text-uppercase p-2 px-3 me-3`">{{
-            method
-          }}</span>
-          {{ path }}
+          <span
+            :class="`badge ${bgClass} rounded-0 text-uppercase p-2 px-3 me-3 h-auto`"
+            style="width: 70px"
+            >{{ method }}</span
+          >
+          <span class="p-1">
+            {{ path }}
+          </span>
         </button>
       </h2>
       <div
@@ -59,8 +63,8 @@
               </div>
             </div>
             <div v-if="responses" class="mb-2">
-              <div class="alert alert-info">
-                <h6>
+              <div class="alert alert-info p-2">
+                <h6 class="m-0">
                   Return value:
                   <span class="font-monospace">{{ returnType ?? "None" }}</span>
                 </h6>

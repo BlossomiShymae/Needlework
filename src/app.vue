@@ -1,15 +1,15 @@
 <template>
-  <div style="padding-left: calc(100vw - 100%)">
+  <div>
     <header
-      class="container container-grid sticky-top p-2 bg-accent bg-accent-20"
+      class="container-fluid container-grid sticky-top p-2 bg-accent bg-accent-20"
       style="z-index: 2000; backdrop-filter: blur(4px)"
     >
       <div class="grid-aside w-100">
-        <div class="d-flex align-content-center align-items-center w-100">
+        <div class="d-flex align-content-center align-items-center w-100 h-100">
           <div class="img-fluid me-2">
             <img src="/favicon.png" class="rounded" width="32" height="32" />
           </div>
-          <h4 class="fw-light">LCU Infiltrator</h4>
+          <h4 class="m-0 p-0"><ApplicationTitle /></h4>
         </div>
       </div>
       <div class="grid-content ps-4 w-100">
@@ -18,28 +18,22 @@
             href="https://github.com/BlossomiShymae"
             class="me-2 hover-dim rounded p-2"
           >
-            <!-- phosphor icon -->
+            <PhGithubLogo weight="fill" color="black" size="24" />
           </a>
         </div>
       </div>
     </header>
-    <main class="container container-grid">
+    <main class="container-fluid container-grid">
       <aside id="aside-parent">
         <nav
           id="aside-navbar"
           class="sticky-top overflow-y-auto h-100 d-flex flex-column p-3"
         >
-          <ul
-            class="mb-2 list-unstyled flex-column border-bottom border-accent"
-          >
+          <ul class="mb-2 list-unstyled flex-column">
             <!-- Plugin endpoints -->
-            <li
-              class="mb-1"
-              v-for="(_value, key, index) in endpoints"
-              :key="index"
-            >
+            <li v-for="(_value, key, index) in endpoints" :key="index">
               <NuxtLink
-                class="btn rounded text-decoration-none hover-dim w-100 text-start"
+                class="btn fw-light rounded text-decoration-none hover-dim w-100 text-start"
                 :to="`/endpoint/${key}`"
               >
                 {{ key }}
@@ -55,17 +49,49 @@
         <NuxtPage />
       </article>
     </main>
-    <div class="container">
-      <footer class="py-3 my-4">
-        <p class="text-center text-body-secondary">
-          © 2023 - Blossomi Shymae 🌸💔
-        </p>
+    <div class="container-fluid">
+      <footer
+        class="py-3 my-4 d-flex flex-wrap justify-content-between align-items-start border-top"
+      >
+        <div class="col-md-4 mb-0 text-muted fs-tiny">
+          <small
+            ><ApplicationTitle /> isn't endorsed by Riot Games and doesn't
+            reflect the views or opinions of Riot Games or anyone officially
+            involved in producing or managing Riot Games properties. Riot Games,
+            and all associated properties are trademarks or registered
+            trademarks of Riot Games, Inc.</small
+          >
+        </div>
+        <div
+          class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto"
+        >
+          <div class="text-secondary">© 2023 - Blossomi Shymae 🌸💔</div>
+        </div>
+        <ul class="nav col-md-4 justify-content-end">
+          <li class="nav-item rounded hover-dim">
+            <a
+              class="nav-link p-0 px-2 text-muted"
+              href="https://hextechdocs.dev/tag/lcu/"
+              target="_blank"
+              >Hextech Docs</a
+            >
+          </li>
+          <li class="nav-item rounded hover-dim">
+            <a
+              class="nav-link p-0 px-2 text-muted"
+              target="_blank"
+              href="https://hextechdocs.dev/getting-started-with-the-lcu-api/"
+              >Getting Started</a
+            >
+          </li>
+        </ul>
       </footer>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { PhGithubLogo } from "@phosphor-icons/vue";
 import { invoke } from "@tauri-apps/api";
 
 const endpoints = await invoke("get_endpoints");

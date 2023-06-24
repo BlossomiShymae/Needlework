@@ -1,7 +1,7 @@
 <template>
   <div class="p-2">
-    <h3>{{ path }}</h3>
-    <div class="mt-2" v-for="plugin in endpoint.plugins">
+    <h5>{{ path }}</h5>
+    <div class="mt-2 border" v-for="plugin in endpoint.plugins">
       <Endpoint
         :method="plugin.method"
         :path="plugin.path"

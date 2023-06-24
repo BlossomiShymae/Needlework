@@ -33,3 +33,10 @@ pub struct Schema {
     pub _type: String,
     pub schema_ids: Vec<String>,
 }
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClientInfo {
+    pub url: String,
+    pub auth_header: String,
+}

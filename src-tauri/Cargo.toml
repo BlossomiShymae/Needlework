@@ -11,6 +11,9 @@ rust-version = "1.60"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[build]
+rustflags = ["-C", "target-cpu=native"]
+
 [build-dependencies]
 tauri-build = { version = "1.4.0", features = [] }
 
@@ -21,7 +24,7 @@ tauri = { version = "1.4.0", features = [ "shell-open", "clipboard-write-text"] 
 tokio = { version = "1.28.2", features = ["full"] }
 hyper = { version = "0.14", features = ["full"] }
 hyper-tls = "0.5.0"
-irelia = { version = "0.3.0", features = [ "full"] }
+irelia = { version = "0.3.1", features = [ "full"] }
 tap = { version = "1.0.1" }
 
 [features]

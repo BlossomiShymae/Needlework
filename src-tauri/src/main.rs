@@ -33,7 +33,8 @@ fn main() {
             handlers::get_endpoints,
             handlers::get_endpoint,
             handlers::send_request,
-            handlers::get_schema
+            handlers::get_schema,
+            handlers::get_client_info
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

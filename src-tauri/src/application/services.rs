@@ -197,9 +197,10 @@ pub mod lcu_schema_service {
 pub mod lcu_service {
     use irelia::{rest::LCUClient, RequestClient};
     use serde_json::Value;
+    use std::str;
     use tap::prelude::*;
 
-    use crate::data::types::StandardError;
+    use crate::data::{models::ClientInfo, types::StandardError};
 
     pub async fn send_request(
         method: &str,
@@ -235,6 +236,17 @@ pub mod lcu_service {
                     .map_err(StandardError::from_lcu_error),
                 _ => Err(StandardError::new("Invalid method operation")),
             },
+            Err(e) => Err(StandardError::from_lcu_error(e)),
+        }
+    }
+
+    pub async fn get_client_info() -> Result<ClientInfo, StandardError> {
+        let client = RequestClient::new();
+        match LCUClient::new(&client) {
+            Ok(lcu_client) => Ok(ClientInfo {
+                url: lcu_client.url().to_string(),
+                auth_header: lcu_client.auth_header().to_string(),
+            }),
             Err(e) => Err(StandardError::from_lcu_error(e)),
         }
     }

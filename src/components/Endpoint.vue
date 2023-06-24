@@ -214,10 +214,43 @@
               </p>
               <p class="m-0 font-monospace">{{ errorMessage }}</p>
             </div>
-            <div v-if="requestUrl" class="mb-2">
+            <div v-if="requestUrl && clientInfo" class="mb-2">
               <h6>Request Url</h6>
+              <div class="alert alert-secondary mb-1">
+                https://{{ clientInfo.url }}{{ requestUrl }}
+              </div>
+              <h6>Authentication</h6>
               <div class="alert alert-secondary">
-                {{ requestUrl }}
+                <p class="m-0">
+                  <span
+                    ><PhLockKey
+                      weight="fill"
+                      color="black"
+                      size="16"
+                      class="me-2"
+                  /></span>
+                  {{ clientInfo.authHeader }}
+                </p>
+                <hr />
+                <p class="m-0">
+                  <span>
+                    <PhLockKeyOpen
+                      weight="fill"
+                      color="black"
+                      size="16"
+                      class="me-2"
+                    />
+                  </span>
+                  {{
+                    clientInfo.authHeader
+                      .split(" ")
+                      .map((x: any) => {
+                        if (x != "Basic") return base64.decode(x);
+                        return x;
+                      })
+                      .join(" ")
+                  }}
+                </p>
               </div>
             </div>
             <div v-if="responseBody">
@@ -296,6 +329,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import base64 from "base-64";
 import { invoke } from "@tauri-apps/api";
 import { writeText } from "@tauri-apps/api/clipboard";
 import {
@@ -305,6 +339,8 @@ import {
   PhArrowsOut,
   PhWarningCircle,
   PhX,
+  PhLockKeyOpen,
+  PhLockKey,
 } from "@phosphor-icons/vue";
 
 const props = defineProps<{
@@ -415,6 +451,7 @@ const errorMessage = ref(null);
 const requestUrl = ref(null);
 const jsonBody = ref(undefined);
 const responseBody = ref(null);
+const clientInfo: Ref<any> = ref(null);
 
 async function execute() {
   clearMessageData();
@@ -452,6 +489,10 @@ async function execute() {
 
     requestUrl.value = computedPath as any;
     responseBody.value = JSON.stringify(data, null, 2) as any;
+
+    // Get request client information. 💻
+    clientInfo.value = await invoke("get_client_info");
+    console.log(clientInfo.value);
   } catch (e: any) {
     errorMessage.value = e;
   }
@@ -482,5 +523,6 @@ function clearMessageData() {
   responseBody.value = null;
   jsonBody.value = undefined;
   errorMessage.value = null;
+  clientInfo.value = null;
 }
 </script>

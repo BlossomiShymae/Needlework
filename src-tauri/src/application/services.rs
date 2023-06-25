@@ -50,28 +50,39 @@ pub mod lcu_schema_service {
             for (method, operation) in operations {
                 let mut plugins: Vec<Plugin> = Vec::new();
                 let mut key_name: String = "".to_string();
-                for tag in operation.tags {
-                    let name = tag.to_lowercase();
-                    if name.contains("plugins") {
-                        continue;
-                    } else if name.contains("plugin") {
-                        plugins.push(Plugin {
-                            method: method.clone(),
-                            path: path.clone(),
-                            description: operation.description.clone(),
-                            operation_id: operation.operation_id.clone(),
-                            parameters: operation.parameters.clone(),
-                            responses: operation.responses.clone(),
-                            summary: operation.summary.clone(),
-                            request_body: operation.request_body.clone(),
-                        });
-                        key_name = name.clone().split(" ").last().unwrap().into();
+
+                // Process and group endpoints into the following formats:
+                // "default" - no tags
+                // "builtin" - 'builtin' not associated with an endpoint
+                // "lol-summoner" etc. - 'plugin' associated with an endpoint
+                if operation.tags.is_empty() {
+                    key_name = "default".into();
+                } else {
+                    for tag in operation.tags {
+                        let lowercase_tag = tag.to_lowercase();
+                        match lowercase_tag.as_str() {
+                            x if lowercase_tag.contains("plugin ") => {
+                                key_name = x.clone().split(" ").last().unwrap().into()
+                            }
+                            "builtin" => key_name = "builtin".into(),
+                            _ => {
+                                continue;
+                            }
+                        }
                         break;
                     }
                 }
-                if !key_name.contains("lol") {
-                    continue;
-                }
+                plugins.push(Plugin {
+                    method: method.clone(),
+                    path: path.clone(),
+                    description: operation.description.clone(),
+                    operation_id: operation.operation_id.clone(),
+                    parameters: operation.parameters.clone(),
+                    responses: operation.responses.clone(),
+                    summary: operation.summary.clone(),
+                    request_body: operation.request_body.clone(),
+                });
+
                 let value = endpoints
                     .get_mut(&key_name)
                     .map(|endpoint| Endpoint {
@@ -90,13 +101,9 @@ pub mod lcu_schema_service {
         }
 
         {
-            println!("Accessing state under mutex...");
             let mut _endpoints = state.endpoints.lock().await;
-            println!("Holding lock...");
             *_endpoints = endpoints.clone();
-            println!("End");
         }
-        println!("Returning endpoints...");
         Ok(endpoints)
     }
 

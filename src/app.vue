@@ -6,6 +6,20 @@
   </NuxtLayout>
 </template>
 
+<style>
+.page-enter-active {
+  transition: all 0.2s ease-out;
+}
+.page-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.page-enter-from,
+.page-leave-to {
+  transform: translateX(10%);
+  opacity: 0;
+}
+</style>
+
 <script setup lang="ts">
 import { Invoker } from "~/composables/invoker";
 import { provide } from "vue";

@@ -264,7 +264,6 @@ if (props.requestBody != null) {
       if (schema.type === "object") {
         for (const [k, v] of Object.entries(schema.properties)) {
           const ref = (v as any).$ref;
-          const type = (v as any).type;
           if (ref != null) {
             const targetType = ref.replace("#/components/schemas/", "");
             schema.properties[k].type = targetType;
@@ -323,7 +322,6 @@ async function execute() {
   let computedPath = props.path;
   for (const path of pathParameters) {
     if (path.data != null) {
-      console.log({ in: path.name, data: path.data });
       computedPath = computedPath.replace(
         `{${path.name}}`,
         encodeURIComponent(path.data)
@@ -339,8 +337,6 @@ async function execute() {
   }
   computedPath += query;
 
-  console.log(JSON.stringify(jsonBody.value));
-
   // Send a request to the LCU! 💚
   try {
     const data = await invoker.send_request(
@@ -354,7 +350,6 @@ async function execute() {
 
     // Get request client information. 💻
     clientInfo.value = await invoker.client_info();
-    console.log(clientInfo.value);
   } catch (e: any) {
     errorMessage.value = e;
   }

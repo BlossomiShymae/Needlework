@@ -132,7 +132,6 @@ import {
   PhLockKey,
   PhLockKeyOpen,
   PhWarningCircle,
-  PhX,
   PhLink,
 } from "@phosphor-icons/vue";
 import base64 from "base-64";
@@ -181,7 +180,6 @@ async function execute() {
   const url = encodeURI(requestPath.value);
   clearMessageData();
   try {
-    console.log(url);
     const data = await invoker.send_request(
       method.value,
       url,

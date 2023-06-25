@@ -129,7 +129,6 @@ async function openSchemasWindow() {
   });
   webview.once("tauri://created", () => {
     webview.setTitle("LCU Friend - Schemas");
-    console.log("created schema window");
   });
   webview.once("tauri://error", console.error);
 }

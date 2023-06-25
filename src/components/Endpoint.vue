@@ -33,35 +33,9 @@
               <h6>Description</h6>
               <p>{{ description }}</p>
             </div>
-            <div v-if="requestSchemas.length > 0" class="mb-2">
+            <SchemaTable :schemas="requestSchemas" class="mb-2">
               <h6>Request Classes</h6>
-              <div
-                v-for="schema in requestSchemas"
-                class="mb-1 border-start border-accent border-4 ps-2"
-              >
-                <p class="fw-bold">{{ schema.name }}</p>
-                <table class="table table-hover">
-                  <thead>
-                    <tr class="table-dark">
-                      <th scope="col">Name</th>
-                      <th scope="col">Type</th>
-                    </tr>
-                  </thead>
-                  <tbody v-if="schema.type === 'object'">
-                    <tr v-for="(property, name, index) in schema.properties">
-                      <th scope="row">{{ name }}</th>
-                      <td>{{ property.type }}</td>
-                    </tr>
-                  </tbody>
-                  <tbody v-else>
-                    <tr>
-                      <th scope="row">{{ schema.enum }}</th>
-                      <td>Enum</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            </SchemaTable>
             <div v-if="responses" class="mb-2">
               <div class="alert alert-info p-2">
                 <h6 class="m-0">
@@ -69,35 +43,9 @@
                   <span class="font-monospace">{{ returnType ?? "None" }}</span>
                 </h6>
               </div>
-              <div v-if="responseSchemas.length > 0" class="mb-2">
+              <SchemaTable :schemas="responseSchemas" class="mb-2">
                 <h6>Response Classes</h6>
-                <div
-                  v-for="schema in responseSchemas"
-                  class="mb-1 border-start border-accent border-4 ps-2"
-                >
-                  <p class="fw-bold">{{ schema.name }}</p>
-                  <table class="table table-hover">
-                    <thead>
-                      <tr class="table-dark">
-                        <th scope="col">Name</th>
-                        <th scope="col">Type</th>
-                      </tr>
-                    </thead>
-                    <tbody v-if="schema.type === 'object'">
-                      <tr v-for="(property, name, index) in schema.properties">
-                        <th scope="row">{{ name }}</th>
-                        <td>{{ property.type }}</td>
-                      </tr>
-                    </tbody>
-                    <tbody v-else>
-                      <tr>
-                        <th scope="row">{{ schema.enum }}</th>
-                        <td>Enum</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              </SchemaTable>
               <h6>Responses</h6>
               <table class="table table-hover">
                 <thead>

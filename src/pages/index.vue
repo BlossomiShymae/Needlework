@@ -58,7 +58,7 @@
       <div class="col">
         <h5>irelia</h5>
         <p class="text-secondary">
-          An LCU binding crate created by JustSylv. This application wouldn't be
+          An LCU binding crate created by AlsoSylv. This application wouldn't be
           possible without her work as it made development totes easier. Thank
           you once again! 💜
         </p>

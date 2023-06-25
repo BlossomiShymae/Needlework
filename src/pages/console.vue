@@ -1,126 +1,139 @@
 <template>
-  <div class="m-2">
-    <h5>Console</h5>
-    <div class="row g-2 mb-2">
-      <div class="col-md-2">
-        <select
-          :class="`form-select h-100 fw-bold ${cssClass}`"
-          v-model="method"
-          @change="changeCssClass"
-        >
-          <option selected value="get">GET</option>
-          <option value="post">POST</option>
-          <option value="put">PUT</option>
-          <option value="delete">DELETE</option>
-          <option value="patch">PATCH</option>
-          <option value="head">HEAD</option>
-        </select>
+  <div>
+    <div class="m-2">
+      <h5>Console</h5>
+      <div class="row g-2 mb-2">
+        <div class="col-md-2">
+          <select
+            :class="`form-select h-100 fw-bold ${cssClass}`"
+            v-model="method"
+            @change="changeCssClass"
+          >
+            <option selected value="get">GET</option>
+            <option value="post">POST</option>
+            <option value="put">PUT</option>
+            <option value="delete">DELETE</option>
+            <option value="patch">PATCH</option>
+            <option value="head">HEAD</option>
+          </select>
+        </div>
+        <div class="col-md-10">
+          <div class="input-group h-100">
+            <span class="input-group-text">
+              <PhLink weight="regular" color="black" size="16" />
+            </span>
+            <div class="form-floating">
+              <input
+                v-model="requestPath"
+                class="form-control"
+                type="text"
+                id="request-path"
+                placeholder="/lol-summoner/v1/current-summoner"
+              />
+              <label for="request-path"
+                >/lol-summoner/v1/current-summoner</label
+              >
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-md-10">
-        <div class="input-group h-100">
-          <span class="input-group-text">
-            <PhLink weight="regular" color="black" size="16" />
-          </span>
-          <div class="form-floating">
-            <input
-              v-model="requestPath"
-              class="form-control"
-              type="text"
-              id="request-path"
-              placeholder="/lol-summoner/v1/current-summoner"
-            />
-            <label for="request-path">/lol-summoner/v1/current-summoner</label>
+
+      <div class="mb-2">
+        <h6>Request Body</h6>
+        <textarea
+          v-model="requestBody"
+          class="form-control"
+          rows="3"
+        ></textarea>
+      </div>
+      <hr />
+      <div class="d-flex justify-content-start mb-2">
+        <button class="btn btn-danger fw-semibold me-2" @click="execute">
+          <span><PhGearSix weight="duotone" color="white" size="24" /></span>
+          Execute
+        </button>
+        <button class="btn btn-secondary fw-semibold me-2" @click="clear">
+          <span><PhBroom weight="duotone" color="white" size="24" /></span>
+          Clear
+        </button>
+      </div>
+      <div
+        v-if="errorMessage"
+        class="alert alert-danger border-start rounded-0 border-danger border-4 border-0 mb-2"
+      >
+        <p
+          class="fw-bold m-0 mb-1 border-bottom border-1 border-danger-subtle pb-2"
+        >
+          <span
+            ><PhWarningCircle weight="fill" color="#800" size="24" class="me-2"
+          /></span>
+          Error
+        </p>
+        <p class="m-0 font-monospace">{{ errorMessage }}</p>
+      </div>
+      <div v-if="requestUrl && clientInfo" class="mb-2">
+        <h6>Request Url</h6>
+        <div class="alert alert-secondary mb-1">
+          https://{{ clientInfo.url }}{{ requestUrl }}
+        </div>
+        <h6>Authentication</h6>
+        <div class="alert alert-secondary">
+          <p class="m-0">
+            <span
+              ><PhLockKey weight="fill" color="black" size="16" class="me-2"
+            /></span>
+            {{ clientInfo.authHeader }}
+          </p>
+          <hr />
+          <p class="m-0">
+            <span>
+              <PhLockKeyOpen
+                weight="fill"
+                color="black"
+                size="16"
+                class="me-2"
+              />
+            </span>
+            {{
+              clientInfo.authHeader
+                .split(" ")
+                .map((x: any) => {
+                  if (x != "Basic") return base64.decode(x);
+                  return x;
+                })
+                .join(" ")
+            }}
+          </p>
+        </div>
+      </div>
+      <div v-if="responseBody">
+        <h6>Response Body</h6>
+        <div class="alert alert-secondary overflow-auto mb-1">
+          <pre style="max-height: 400px">{{ responseBody }}</pre>
+          <hr />
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-secondary ms-2" @click="copyToClipboard">
+              <span
+                ><PhClipboard weight="duotone" color="white" side="24"
+              /></span>
+              Copy
+            </button>
+            <button
+              class="btn btn-secondary ms-2"
+              data-bs-target="#modal-console"
+              data-bs-toggle="modal"
+            >
+              <span
+                ><PhArrowsOut weight="duotone" color="white" side="24" />
+              </span>
+              Expand
+            </button>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="mb-2">
-      <h6>Request Body</h6>
-      <textarea v-model="requestBody" class="form-control" rows="3"></textarea>
-    </div>
-    <hr />
-    <div class="d-flex justify-content-start mb-2">
-      <button class="btn btn-danger fw-semibold me-2" @click="execute">
-        <span><PhGearSix weight="duotone" color="white" size="24" /></span>
-        Execute
-      </button>
-      <button class="btn btn-secondary fw-semibold me-2" @click="clear">
-        <span><PhBroom weight="duotone" color="white" size="24" /></span>
-        Clear
-      </button>
-    </div>
-    <div
-      v-if="errorMessage"
-      class="alert alert-danger border-start rounded-0 border-danger border-4 border-0 mb-2"
-    >
-      <p
-        class="fw-bold m-0 mb-1 border-bottom border-1 border-danger-subtle pb-2"
-      >
-        <span
-          ><PhWarningCircle weight="fill" color="#800" size="24" class="me-2"
-        /></span>
-        Error
-      </p>
-      <p class="m-0 font-monospace">{{ errorMessage }}</p>
-    </div>
-    <div v-if="requestUrl && clientInfo" class="mb-2">
-      <h6>Request Url</h6>
-      <div class="alert alert-secondary mb-1">
-        https://{{ clientInfo.url }}{{ requestUrl }}
-      </div>
-      <h6>Authentication</h6>
-      <div class="alert alert-secondary">
-        <p class="m-0">
-          <span
-            ><PhLockKey weight="fill" color="black" size="16" class="me-2"
-          /></span>
-          {{ clientInfo.authHeader }}
-        </p>
-        <hr />
-        <p class="m-0">
-          <span>
-            <PhLockKeyOpen weight="fill" color="black" size="16" class="me-2" />
-          </span>
-          {{
-            clientInfo.authHeader
-              .split(" ")
-              .map((x: any) => {
-                if (x != "Basic") return base64.decode(x);
-                return x;
-              })
-              .join(" ")
-          }}
-        </p>
-      </div>
-    </div>
-    <div v-if="responseBody">
-      <h6>Response Body</h6>
-      <div class="alert alert-secondary overflow-auto mb-1">
-        <pre style="max-height: 400px">{{ responseBody }}</pre>
-        <hr />
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-secondary ms-2" @click="copyToClipboard">
-            <span
-              ><PhClipboard weight="duotone" color="white" side="24"
-            /></span>
-            Copy
-          </button>
-          <button
-            class="btn btn-secondary ms-2"
-            data-bs-target="#modal-console"
-            data-bs-toggle="modal"
-          >
-            <span
-              ><PhArrowsOut weight="duotone" color="white" side="24" />
-            </span>
-            Expand
-          </button>
-        </div>
-      </div>
-    </div>
+    <ResponseModal hash="console" :response-text="responseBody" />
   </div>
-  <ResponseModal hash="console" :response-text="responseBody" />
 </template>
 
 <script lang="ts" setup>

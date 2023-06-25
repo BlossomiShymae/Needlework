@@ -181,7 +181,7 @@
       </div>
     </div>
   </div>
-  <ResponseModal :hash="hash" :responseText="responseBody" />
+  <ResponseModal :hash="hash" :responseText="responseBody ?? ref('')" />
 </template>
 
 <script setup lang="ts">

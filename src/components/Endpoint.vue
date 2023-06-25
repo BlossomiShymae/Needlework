@@ -368,7 +368,10 @@ switch (props.method) {
     bgClass = "bg-danger";
     break;
   case "patch":
-    bgClass = "bg-secondary";
+    bgClass = "bg-info";
+    break;
+  case "head":
+    bgClass = "bg-dark";
     break;
   default:
     bgClass = "bg-primary";

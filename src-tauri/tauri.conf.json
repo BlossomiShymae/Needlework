@@ -55,7 +55,7 @@
         "setResizable": false,
         "setSize": false,
         "setSkipTaskbar": false,
-        "setTitle": false,
+        "setTitle": true,
         "show": false,
         "startDragging": false,
         "unmaximize": false,

@@ -62,66 +62,12 @@
                 </tbody>
               </table>
             </div>
-            <div v-if="queryParameters.length > 0" class="mb-2">
+            <ParameterTable :parameters="queryParameters" class="mb-2">
               <h6>Query Parameters</h6>
-              <table class="table table-hover">
-                <thead>
-                  <tr class="table-dark">
-                    <th scope="col">Name</th>
-                    <th scope="col">Value</th>
-                    <th scope="col">Data Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="parameter in queryParameters">
-                    <th scope="row">
-                      {{ parameter.name }}
-                      <span v-if="parameter.required" class="badge bg-danger"
-                        >Required</span
-                      >
-                    </th>
-                    <td><input v-model="parameter.data" /></td>
-                    <td>
-                      {{
-                        parameter.type === "array"
-                          ? `${parameter.type}[]`
-                          : parameter.type
-                      }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div v-if="pathParameters.length > 0" class="mb-2">
+            </ParameterTable>
+            <ParameterTable :parameters="pathParameters" class="mb-2">
               <h6>Path Parameters</h6>
-              <table class="table table-hover">
-                <thead>
-                  <tr class="table-dark">
-                    <th scope="col">Name</th>
-                    <th scope="col">Value</th>
-                    <th scope="col">Data Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="parameter in pathParameters">
-                    <th scope="row">
-                      {{ parameter.name }}
-                      <span v-if="parameter.required" class="badge bg-danger"
-                        >Required</span
-                      >
-                    </th>
-                    <td><input v-model="parameter.data" /></td>
-                    <td>
-                      {{
-                        parameter.type === "array"
-                          ? `${parameter.type}[]`
-                          : parameter.type
-                      }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            </ParameterTable>
             <div v-if="requestBody" class="mb-2">
               <h6>Request Body</h6>
               <textarea

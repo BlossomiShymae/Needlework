@@ -45,7 +45,7 @@ import { writeText } from "@tauri-apps/api/clipboard";
 
 const props = defineProps<{
   hash: string;
-  responseText: string;
+  responseText: Ref<string>;
 }>();
 
 async function copyToClipboard() {

@@ -49,25 +49,27 @@ pub mod lcu_schema_service {
         for (path, operations) in data.unwrap().paths {
             for (method, operation) in operations {
                 let mut plugins: Vec<Plugin> = Vec::new();
-                let mut key_name: String = "".to_string();
+                let mut key_name: String = "_unknown".to_string();
 
                 // Process and group endpoints into the following formats:
+                // "_unknown" - group that should not be possible
                 // "default" - no tags
                 // "builtin" - 'builtin' not associated with an endpoint
                 // "lol-summoner" etc. - 'plugin' associated with an endpoint
+                // "performance", "tracing", etc.
                 if operation.tags.is_empty() {
                     key_name = "default".into();
                 } else {
                     for tag in operation.tags {
                         let lowercase_tag = tag.to_lowercase();
                         match lowercase_tag.as_str() {
+                            "plugins" => {
+                                continue;
+                            }
                             x if lowercase_tag.contains("plugin ") => {
                                 key_name = x.clone().split(" ").last().unwrap().into()
                             }
-                            "builtin" => key_name = "builtin".into(),
-                            _ => {
-                                continue;
-                            }
+                            _ => key_name = lowercase_tag.clone().into(),
                         }
                         break;
                     }

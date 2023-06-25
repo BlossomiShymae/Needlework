@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout>
-    <NuxtPage />
+    <!-- Use keepalive page caching to greatly improve user experience
+       *faster loading for already navigated pages and preserve state* !!! 💜 -->
+    <NuxtPage keepalive />
   </NuxtLayout>
 </template>
 

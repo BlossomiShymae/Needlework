@@ -195,7 +195,6 @@ import {
   PhClipboard,
   PhArrowsOut,
   PhWarningCircle,
-  PhX,
   PhLockKeyOpen,
   PhLockKey,
 } from "@phosphor-icons/vue";
@@ -239,18 +238,20 @@ switch (props.method) {
 const hash =
   props.method +
   props.path.replace("/", "-").replace("{", "-").replace("}", "-");
-const queryParameters = props.parameters
-  .filter((x) => x.in === "query")
-  .map((x) => {
-    x.data = null;
-    return x;
-  });
-const pathParameters = props.parameters
-  .filter((x) => x.in === "path")
-  .map((x) => {
-    x.data = null;
-    return x;
-  });
+
+// Collect query and path parameters
+const queryParameters: any[] = [];
+const pathParameters: any[] = [];
+for (const parameter of props.parameters) {
+  parameter.data = null;
+  if (parameter.in === "query") {
+    queryParameters.push(parameter);
+    continue;
+  } else if (parameter.in == "path") {
+    pathParameters.push(parameter);
+    continue;
+  }
+}
 
 let requestSchemas: any[] = [];
 if (props.requestBody != null) {

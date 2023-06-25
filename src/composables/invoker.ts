@@ -71,7 +71,14 @@ export class Invoker {
     return (await invoke("send_request", {
       method,
       path,
-      body: body != null ? JSON.stringify(JSON.parse(body)) : null,
+      body: this.isValidData(body) ? JSON.stringify(JSON.parse(body)) : null,
     })) as any;
+  }
+
+  isValidData(body: any) {
+    if (body != null && body !== "") {
+      return true;
+    }
+    return false;
   }
 }

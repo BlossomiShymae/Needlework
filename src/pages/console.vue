@@ -37,10 +37,10 @@
           </div>
         </div>
       </div>
-
       <div class="mb-2">
         <h6>Request Body</h6>
         <textarea
+          :disabled="isRequestBodyEnabled ? false : true"
           v-model="requestBody"
           class="form-control"
           rows="3"
@@ -148,7 +148,7 @@ import {
   PhLink,
 } from "@phosphor-icons/vue";
 import base64 from "base-64";
-import { inject, ref } from "vue";
+import { inject, ref, computed } from "vue";
 import { Invoker } from "~/composables/invoker";
 import { writeText } from "@tauri-apps/api/clipboard";
 
@@ -162,6 +162,9 @@ const requestPath: Ref<any> = ref(null);
 const requestBody: Ref<any> = ref(null);
 const responseBody: Ref<any> = ref(null);
 const method: Ref<any> = ref("get");
+const isRequestBodyEnabled = computed(() => {
+  return method.value === "get" ? false : true;
+});
 
 function changeCssClass() {
   switch (method.value) {

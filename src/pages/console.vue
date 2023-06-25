@@ -1,16 +1,40 @@
 <template>
   <div class="m-2">
     <h5>Console</h5>
-    <h6>Request Url</h6>
-    <select class="form-select mb-2" v-model="method">
-      <option selected value="get">GET</option>
-      <option value="post">POST</option>
-      <option value="put">PUT</option>
-      <option value="delete">DELETE</option>
-      <option value="patch">PATCH</option>
-      <option value="head">HEAD</option>
-    </select>
-    <input class="mb-2 form-control" v-model="requestPath" />
+    <div class="row g-2 mb-2">
+      <div class="col-md-2">
+        <select
+          :class="`form-select h-100 fw-bold ${cssClass}`"
+          v-model="method"
+          @change="changeCssClass"
+        >
+          <option selected value="get">GET</option>
+          <option value="post">POST</option>
+          <option value="put">PUT</option>
+          <option value="delete">DELETE</option>
+          <option value="patch">PATCH</option>
+          <option value="head">HEAD</option>
+        </select>
+      </div>
+      <div class="col-md-10">
+        <div class="input-group h-100">
+          <span class="input-group-text">
+            <PhLink weight="regular" color="black" size="16" />
+          </span>
+          <div class="form-floating">
+            <input
+              v-model="requestPath"
+              class="form-control"
+              type="text"
+              id="request-path"
+              placeholder="/lol-summoner/v1/current-summoner"
+            />
+            <label for="request-path">/lol-summoner/v1/current-summoner</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="mb-2">
       <h6>Request Body</h6>
       <textarea v-model="requestBody" class="form-control" rows="3"></textarea>
@@ -146,12 +170,14 @@ import {
   PhLockKeyOpen,
   PhWarningCircle,
   PhX,
+  PhLink,
 } from "@phosphor-icons/vue";
 import base64 from "base-64";
 import { invoke } from "@tauri-apps/api";
 import { writeText } from "@tauri-apps/api/clipboard";
 import { ref } from "vue";
 
+const cssClass = ref("bg-primary-subtle");
 const errorMessage: Ref<any> = ref(null);
 const clientInfo: Ref<any> = ref(null);
 const requestUrl: Ref<any> = ref(null);
@@ -159,6 +185,32 @@ const requestPath: Ref<any> = ref(null);
 const requestBody: Ref<any> = ref(null);
 const responseBody: Ref<any> = ref(null);
 const method: Ref<any> = ref("get");
+
+function changeCssClass() {
+  switch (method.value) {
+    case "get":
+      cssClass.value = "bg-primary-subtle";
+      break;
+    case "post":
+      cssClass.value = "bg-success-subtle";
+      break;
+    case "put":
+      cssClass.value = "bg-warning-subtle";
+      break;
+    case "delete":
+      cssClass.value = "bg-danger-subtle";
+      break;
+    case "patch":
+      cssClass.value = "bg-info-subtle";
+      break;
+    case "head":
+      cssClass.value = "bg-dark-subtle";
+      break;
+    default:
+      cssClass.value = "bg-primary-subtle";
+      break;
+  }
+}
 
 async function execute() {
   const url = encodeURI(requestPath.value);

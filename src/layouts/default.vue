@@ -115,10 +115,13 @@ import {
   PhHouse,
   PhTerminal,
 } from "@phosphor-icons/vue";
-import { invoke } from "@tauri-apps/api";
+import { Invoker } from "~/composables/invoker";
+import { inject } from "vue";
 import { WebviewWindow } from "@tauri-apps/api/window";
 
-const endpoints = await invoke("get_endpoints");
+const invoker = inject(Invoker.Key);
+
+const endpoints = await invoker.endpoints();
 
 async function openSchemasWindow() {
   const webview = new WebviewWindow("schemas-window", {

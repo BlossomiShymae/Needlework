@@ -328,10 +328,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import base64 from "base-64";
-import { invoke } from "@tauri-apps/api";
 import { writeText } from "@tauri-apps/api/clipboard";
+import { Invoker } from "~/composables/invoker";
 import {
   PhGearSix,
   PhBroom,
@@ -352,6 +352,8 @@ const props = defineProps<{
   summary?: string;
   requestBody?: any;
 }>();
+
+const invoker = inject(Invoker.Key) as Invoker;
 
 let bgClass = "";
 switch (props.method) {
@@ -399,7 +401,7 @@ if (props.requestBody != null) {
   if (_schema != null) {
     let key = _schema.$ref;
     if (key != null) {
-      let schema = (await invoke("get_schema", { name: key })) as any;
+      let schema = await invoker.schema_by_name(key);
       schema.name = key.replace("#/components/schemas/", "");
 
       if (schema.type === "object") {
@@ -449,7 +451,7 @@ if (props.responses != null) {
 }
 let responseSchemas: any[] = [];
 if (returnKey != null) {
-  let schema = (await invoke("get_schema", { name: returnKey })) as any;
+  let schema = await invoker.schema_by_name(returnKey);
   responseSchemas.push(schema);
 }
 
@@ -484,20 +486,17 @@ async function execute() {
 
   // Send a request to the LCU! 💚
   try {
-    const data: any = await invoke("send_request", {
-      method: props.method,
-      path: computedPath,
-      body:
-        jsonBody.value != null
-          ? JSON.stringify(JSON.parse(jsonBody.value))
-          : null,
-    });
+    const data = await invoker.send_request(
+      props.method,
+      computedPath,
+      jsonBody.value
+    );
 
     requestUrl.value = computedPath as any;
     responseBody.value = JSON.stringify(data, null, 2) as any;
 
     // Get request client information. 💻
-    clientInfo.value = await invoke("get_client_info");
+    clientInfo.value = await invoker.client_info();
     console.log(clientInfo.value);
   } catch (e: any) {
     errorMessage.value = e;

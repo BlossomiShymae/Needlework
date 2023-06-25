@@ -16,10 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import { invoke } from "@tauri-apps/api";
+import { inject } from "vue";
+import { Invoker } from "~/composables/invoker";
+
+const invoker = inject(Invoker.Key) as Invoker;
 const route = useRoute();
 
 const path = route.params.path;
-const endpoint: any = await invoke("get_endpoint", { name: path });
-console.log(endpoint);
+const endpoint = await invoker.endpoint_by_name(path as string);
 </script>

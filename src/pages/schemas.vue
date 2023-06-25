@@ -15,9 +15,12 @@
 </template>
 
 <script lang="ts" setup>
-import { invoke } from "@tauri-apps/api";
+import { inject } from "vue";
+import { Invoker } from "~/composables/invoker";
 
-const schemas = (await invoke("get_schemas")) as any;
+const invoker = inject(Invoker.Key) as Invoker;
+
+const schemas = await invoker.schemas();
 
 definePageMeta({
   layout: "window",

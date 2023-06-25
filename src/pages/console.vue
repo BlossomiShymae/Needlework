@@ -173,9 +173,11 @@ import {
   PhLink,
 } from "@phosphor-icons/vue";
 import base64 from "base-64";
-import { invoke } from "@tauri-apps/api";
+import { inject, ref } from "vue";
+import { Invoker } from "~/composables/invoker";
 import { writeText } from "@tauri-apps/api/clipboard";
-import { ref } from "vue";
+
+const invoker = inject(Invoker.Key) as Invoker;
 
 const cssClass = ref("bg-primary-subtle");
 const errorMessage: Ref<any> = ref(null);
@@ -217,17 +219,14 @@ async function execute() {
   clearMessageData();
   try {
     console.log(url);
-    const data: any = await invoke("send_request", {
-      method: method.value,
-      path: url,
-      body:
-        requestBody.value != null
-          ? JSON.stringify(JSON.parse(requestBody.value))
-          : null,
-    });
+    const data = await invoker.send_request(
+      method.value,
+      url,
+      requestBody.value
+    );
 
     responseBody.value = JSON.stringify(data, null, 2) as any;
-    clientInfo.value = await invoke("get_client_info");
+    clientInfo.value = await invoker.client_info();
     requestUrl.value = url;
   } catch (e: any) {
     errorMessage.value = e;

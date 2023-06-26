@@ -316,7 +316,7 @@ const errorMessage = ref(null);
 const requestUrl = ref(null);
 const jsonBody = ref(undefined);
 const responseBody = ref(null);
-const clientInfo: Ref<any> = ref(null);
+const clientInfo: any = ref(null);
 
 async function execute() {
   clearMessageData();

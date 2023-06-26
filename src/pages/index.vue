@@ -1,6 +1,6 @@
 <template>
   <div class="m-2">
-    <h1>Welcome to <ApplicationTitle /></h1>
+    <p class="fs-2">Welcome to <ApplicationTitle /></p>
     <div class="row">
       <div class="col">
         <div

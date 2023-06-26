@@ -6,8 +6,8 @@
     >
       <div class="grid-aside w-100">
         <div class="d-flex align-content-center align-items-center w-100 h-100">
-          <div class="img-fluid me-2">
-            <img src="/favicon.png" class="rounded" width="32" height="32" />
+          <div class="img-fluid img-thumbnail me-2">
+            <img src="/favicon.png" width="32" />
           </div>
           <NuxtLink
             class="btn rounded text-decoration-none hover-dim me-2"
@@ -31,12 +31,13 @@
       </div>
       <div class="grid-content ps-4 w-100">
         <div class="d-flex justify-content-end align-items-center w-100 h-100">
-          <a
-            href="https://github.com/BlossomiShymae"
-            class="me-2 hover-dim rounded p-2"
+          <ExternalLink
+            button
+            href="https://github.com/BlossomiShymae/lcu-helper"
+            class="me-2 hover-dim rounded p-2 border-0"
           >
             <PhGithubLogo weight="fill" color="black" size="24" />
-          </a>
+          </ExternalLink>
         </div>
       </div>
     </header>
@@ -85,20 +86,21 @@
           <div class="text-secondary">© 2023 - Blossomi Shymae 🌸💔</div>
         </div>
         <ul class="nav col-md-4 justify-content-end">
-          <li class="nav-item rounded hover-dim">
-            <a
+          <li class="nav-item rounded hover-dim me-2">
+            <ExternalLink
+              button
               class="nav-link p-0 px-2 text-muted"
               href="https://hextechdocs.dev/tag/lcu/"
-              target="_blank"
-              >Hextech Docs</a
+              >Hextech Docs</ExternalLink
             >
           </li>
           <li class="nav-item rounded hover-dim">
-            <a
+            <ExternalLink
+              button
               class="nav-link p-0 px-2 text-muted"
               target="_blank"
               href="https://hextechdocs.dev/getting-started-with-the-lcu-api/"
-              >Getting Started</a
+              >Getting Started</ExternalLink
             >
           </li>
         </ul>
@@ -128,7 +130,7 @@ async function openSchemasWindow() {
     url: "/schemas",
   });
   webview.once("tauri://created", () => {
-    webview.setTitle("LCU Friend - Schemas");
+    webview.setTitle("LCU Helper - Schemas");
   });
   webview.once("tauri://error", console.error);
 }

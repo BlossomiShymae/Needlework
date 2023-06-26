@@ -1,3 +1,3 @@
 <template>
-  <span>LCU Infiltrator</span>
+  <span>LCU Helper</span>
 </template>

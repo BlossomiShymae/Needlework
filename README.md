@@ -1,63 +1,30 @@
-# Nuxt 3 Minimal Starter
+# LCU Helper
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+LCU Helper is an open-source helper tool for the LCU that provides documented endpoints and can send requests without any setup! ✨
 
-## Setup
+## Download LCU Helper
 
-Make sure to install the dependencies:
+## Contributors
 
-```bash
-# npm
-npm install
+## Credits
 
-# pnpm
-pnpm install
+### irelia
 
-# yarn
-yarn install
-```
+An LCU binding crate created by AlsoSylv. This application wouldn't be possible without her work as it made development totes easier. Thank you once again! 💜
+- [Repository](https://github.com/AlsoSylv/Irelia)
+- [crates.io](https://crates.io/crates/irelia)
 
-## Development Server
+### LCU Explorer
 
-Start the development server on `http://localhost:3000`:
+This project was inspired by LCU Explorer created by Ray! 💚
 
-```bash
-# npm
-npm run dev
+### lcu-schema
 
-# pnpm
-pnpm run dev
+Endpoints and schemas are provided by MingweiSamuel's [hosted OpenAPI file.](http://www.mingweisamuel.com/lcu-schema/tool/) Thank you!
 
-# yarn
-yarn dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Disclaimer
+LCU Helper isn't endorsed by Riot Games and doesn't
+reflect the views or opinions of Riot Games or anyone officially
+involved in producing or managing Riot Games properties. Riot Games,
+and all associated properties are trademarks or registered
+trademarks of Riot Games, Inc.

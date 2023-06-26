@@ -7,7 +7,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "lcu-infiltrator",
+    "productName": "lcu-helper",
     "version": "0.1.0"
   },
   "tauri": {
@@ -70,14 +70,8 @@
         "depends": []
       },
       "externalBin": [],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "com.tauri.dev",
+      "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png"],
+      "identifier": "io.github.blossomishymae",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -106,7 +100,7 @@
         "fullscreen": false,
         "height": 720,
         "resizable": true,
-        "title": "LCU Infiltrator",
+        "title": "LCU Helper",
         "width": 1280
       }
     ]

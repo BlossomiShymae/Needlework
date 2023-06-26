@@ -14,8 +14,8 @@
           <p>
             This application is for testing/educational purposes only. Endpoints
             like <b>lol-chat</b>, <b>lol-store</b>, <b>riot-client</b>, etc. are
-            associated with bad actors. Don't expect much help with anything
-            Terms of Service breaking. :c
+            associated with bad actors so don't expect much help for those. Okie
+            dokie? {{ `(＾▽＾)` }}
           </p>
         </div>
       </div>

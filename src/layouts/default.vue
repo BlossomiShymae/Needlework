@@ -31,6 +31,7 @@
       </div>
       <div class="grid-content ps-4 w-100">
         <div class="d-flex justify-content-end align-items-center w-100 h-100">
+          <span class="badge bg-dark me-2">{{ appVersion }}</span>
           <ExternalLink
             button
             href="https://github.com/BlossomiShymae/lcu-helper"
@@ -120,6 +121,9 @@ import {
 import { Invoker } from "~/composables/invoker";
 import { inject } from "vue";
 import { WebviewWindow } from "@tauri-apps/api/window";
+import { getVersion } from "@tauri-apps/api/app";
+
+const appVersion = await getVersion();
 
 const invoker = inject(Invoker.Key);
 

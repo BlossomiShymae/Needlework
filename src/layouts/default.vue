@@ -27,6 +27,12 @@
           >
             <PhFiles weight="fill" color="black" size="24" />
           </button>
+          <NuxtLink
+            class="btn rounded text-decoration-none hover-dim me-2"
+            to="/websocket"
+          >
+            <PhPlugs weight="fill" color="black" size="24" />
+          </NuxtLink>
         </div>
       </div>
       <div class="grid-content ps-4 w-100">
@@ -63,7 +69,7 @@
       </aside>
       <article
         id="main-content"
-        class="order-1 grid-content ps-4 pb-4 overflow-x-hidden"
+        class="order-1 grid-content ps-4 pb-4 overflow-hidden"
       >
         <slot></slot>
       </article>
@@ -116,6 +122,7 @@ import {
   PhFiles,
   PhGithubLogo,
   PhHouse,
+  PhPlugs,
   PhTerminal,
 } from "@phosphor-icons/vue";
 import { Invoker } from "~/composables/invoker";

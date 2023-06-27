@@ -1,3 +1,4 @@
+use serde::Deserialize;
 use serde::Serialize;
 use serde_json::Map;
 use serde_json::Value;
@@ -39,4 +40,23 @@ pub struct Schema {
 pub struct ClientInfo {
     pub url: String,
     pub auth_header: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WebSocketMessage {
+    pub opcode: i64,
+    pub event: String,
+    pub data: Value,
+    pub uri: String,
+    pub event_type: String,
+    pub timestamp: u128,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WebSocketPayload {
+    pub data: Value,
+    pub uri: String,
+    pub event_type: String,
 }

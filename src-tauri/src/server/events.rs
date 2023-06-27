@@ -1,13 +1,13 @@
+use std::{
+    error::Error,
+    time::{SystemTime, UNIX_EPOCH},
+};
+
 use futures_util::StreamExt;
 use irelia::ws::{EventType, LCUWebSocket};
-use serde::Serialize;
-use std::error::Error;
-use tauri::App;
+use tauri::{App, Manager};
 
-#[derive(Clone, Serialize)]
-struct Payload {
-    message: String,
-}
+use crate::data::models::{WebSocketMessage, WebSocketPayload};
 
 pub fn inject_events(app: &mut App) -> Result<(), Box<dyn Error>> {
     let handle = app.handle();
@@ -15,16 +15,26 @@ pub fn inject_events(app: &mut App) -> Result<(), Box<dyn Error>> {
         let mut ws = LCUWebSocket::new().await.unwrap();
         ws.subscribe(EventType::OnJsonApiEvent);
         loop {
+            let _handle = handle.clone();
             if let Some(event) = ws.next().await {
-                event.map(|v| {
+                let _ = event.map(|v| {
                     let message = v.as_array().unwrap();
-                    let payload = message.get(2);
-                    payload.map(|v| {
-                        let obj = v.as_object().unwrap();
-                        let uri = obj.get("uri").unwrap();
-                        let event_type = obj.get("eventType").unwrap();
-                        println!("{:?}", (event_type, uri));
-                    });
+                    let opcode = message.get(0).unwrap().as_i64().unwrap();
+                    let event = message.get(1).unwrap().as_str().unwrap();
+                    let payload: WebSocketPayload =
+                        serde_json::from_value(message.get(2).unwrap().clone()).unwrap();
+                    let wsm = WebSocketMessage {
+                        opcode,
+                        event: event.into(),
+                        data: payload.data,
+                        event_type: payload.event_type,
+                        uri: payload.uri,
+                        timestamp: SystemTime::now()
+                            .duration_since(UNIX_EPOCH)
+                            .unwrap()
+                            .as_millis(),
+                    };
+                    let _ = _handle.emit_all("lcu-ws-event", wsm);
                 });
             };
         }

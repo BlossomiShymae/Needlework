@@ -8,7 +8,7 @@ pub mod server;
 use std::{collections::HashMap, sync::Arc};
 
 use data::models::{Endpoint, Schema};
-use server::handlers;
+use server::{events::inject_events, handlers};
 use tokio::sync::Mutex;
 
 pub struct Data {
@@ -27,6 +27,7 @@ impl Data {
 
 fn main() {
     tauri::Builder::default()
+        .setup(|app| inject_events(app))
         .manage(Data::new())
         .invoke_handler(tauri::generate_handler![
             handlers::get_info,

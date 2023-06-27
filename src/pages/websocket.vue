@@ -22,6 +22,7 @@
           type="checkbox"
           role="switch"
           id="tail-switch"
+          v-model="isTailing"
         />
         <label class="form-check-label" for="tail-switch">Tail</label>
       </div>
@@ -53,10 +54,16 @@
 .parent-content {
   height: 95%;
   position: relative;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y mandatory;
 }
 .content {
   height: 95%;
   position: absolute;
+}
+
+.content > button:last-child {
+  scroll-snap-align: v-bind(snap);
 }
 </style>
 
@@ -79,6 +86,10 @@ const filteredEvents = computed(() => {
   });
 });
 const isAttached = ref(true);
+const isTailing = ref(false);
+const snap = computed(() => {
+  return isTailing.value ? "end" : "inherit";
+});
 
 await listen("lcu-ws-event", (event: any) => {
   if (isAttached.value) events.value.push(event);

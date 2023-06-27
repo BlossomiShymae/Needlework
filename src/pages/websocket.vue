@@ -5,7 +5,7 @@
         <PhBroom weight="duotone" color="white" size="24" />
       </button>
       <span class="input-group-text">Filter</span>
-      <input type="text" class="form-control me-4" />
+      <input type="text" class="form-control me-4" v-model="filter" />
       <div class="form-check form-switch me-4">
         <input
           class="form-check-input"
@@ -32,7 +32,7 @@
         <button
           type="button"
           class="list-group-item list-group-item-action"
-          v-for="event in events"
+          v-for="event in filteredEvents"
           :key="event"
         >
           <span class="text-primary-subtle me-2">{{
@@ -65,6 +65,18 @@ import { ref, Ref, computed } from "vue";
 import { listen } from "@tauri-apps/api/event";
 
 const events: Ref<any[]> = ref([]);
+const filter = ref("");
+const filteredEvents = computed(() => {
+  return events.value.filter((x) => {
+    if (filter.value === "") return true;
+    const { timestamp, eventType, uri } = x.payload as any;
+    return (
+      `${timestamp} ${eventType} ${uri}`
+        .toLowerCase()
+        .indexOf(filter.value.toLowerCase()) > -1
+    );
+  });
+});
 
 await listen("lcu-ws-event", (event: any) => {
   console.log(event);

@@ -12,6 +12,7 @@
           type="checkbox"
           role="switch"
           id="attach-switch"
+          v-model="isAttached"
         />
         <label class="form-check-label" for="attach-switch">Attach</label>
       </div>
@@ -77,10 +78,10 @@ const filteredEvents = computed(() => {
     );
   });
 });
+const isAttached = ref(true);
 
 await listen("lcu-ws-event", (event: any) => {
-  console.log(event);
-  events.value.push(event);
+  if (isAttached.value) events.value.push(event);
 });
 
 function getTimestamp(milliseconds: number) {

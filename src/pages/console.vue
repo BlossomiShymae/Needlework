@@ -109,7 +109,9 @@
       <div v-if="responseBody">
         <h6>Response Body</h6>
         <div class="alert alert-secondary overflow-auto mb-1">
-          <pre style="max-height: 400px">{{ responseBody }}</pre>
+          <pre style="max-height: 400px">
+            <code class="language-json" v-html="html"></code>
+          </pre>
           <hr />
           <div class="d-flex justify-content-end">
             <button class="btn btn-secondary ms-2" @click="copyToClipboard">
@@ -151,6 +153,8 @@ import base64 from "base-64";
 import { inject, ref, computed } from "vue";
 import { Invoker } from "~/composables/invoker";
 import { writeText } from "@tauri-apps/api/clipboard";
+import hljs from "highlight.js";
+import "highlight.js/styles/default.css";
 
 const invoker = inject(Invoker.Key) as Invoker;
 
@@ -161,6 +165,7 @@ const requestUrl: Ref<any> = ref(null);
 const requestPath: Ref<any> = ref(null);
 const requestBody: Ref<any> = ref(null);
 const responseBody: Ref<any> = ref(null);
+const html = ref("");
 const method: Ref<any> = ref("get");
 const isRequestBodyEnabled = computed(() => {
   return method.value === "get" ? false : true;
@@ -203,6 +208,7 @@ async function execute() {
     );
 
     responseBody.value = JSON.stringify(data, null, 2) as any;
+    html.value = hljs.highlight(responseBody.value, { language: "json" }).value;
     clientInfo.value = await invoker.client_info();
     requestUrl.value = url;
   } catch (e: any) {

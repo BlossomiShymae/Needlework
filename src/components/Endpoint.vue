@@ -150,7 +150,9 @@
             <div v-if="responseBody">
               <h6>Response Body</h6>
               <div class="alert alert-secondary overflow-auto mb-1">
-                <pre style="max-height: 400px">{{ responseBody }}</pre>
+                <pre style="max-height: 400px">
+                  <code class="language-json" v-html="html"></code>
+                </pre>
                 <hr />
                 <div class="d-flex justify-content-end">
                   <button
@@ -185,7 +187,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from "vue";
+import { ref, inject, computed } from "vue";
 import base64 from "base-64";
 import { writeText } from "@tauri-apps/api/clipboard";
 import { Invoker } from "~/composables/invoker";
@@ -198,6 +200,8 @@ import {
   PhLockKeyOpen,
   PhLockKey,
 } from "@phosphor-icons/vue";
+import hljs from "highlight.js";
+import "highlight.js/styles/default.css";
 
 const props = defineProps<{
   method: string;
@@ -317,6 +321,12 @@ const requestUrl = ref(null);
 const jsonBody = ref(undefined);
 const responseBody = ref(null);
 const clientInfo: any = ref(null);
+
+const html = computed(() => {
+  if (responseBody.value == null) return "";
+  if (responseBody.value == "") return "";
+  return hljs.highlight(responseBody.value, { language: "json" }).value;
+});
 
 async function execute() {
   clearMessageData();

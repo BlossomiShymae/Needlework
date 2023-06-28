@@ -17,7 +17,9 @@
         </div>
         <div class="modal-body">
           <div class="alert alert-secondary">
-            <pre>{{ responseText }}</pre>
+            <pre>
+              <code class="language-json" v-html="html"></code>
+            </pre>
           </div>
         </div>
         <div class="modal-footer">
@@ -42,11 +44,20 @@
 <script lang="ts" setup>
 import { PhClipboard, PhX } from "@phosphor-icons/vue";
 import { writeText } from "@tauri-apps/api/clipboard";
+import { computed, Ref } from "vue";
+import hljs from "highlight.js";
+import "highlight.js/styles/default.css";
 
 const props = defineProps<{
   hash: string;
   responseText: Ref<string>;
 }>();
+
+const html = computed(() => {
+  if (props.responseText == null) return "";
+  if (props.responseText.value == "") return "";
+  return hljs.highlight(props.responseText as any, { language: "json" }).value;
+});
 
 async function copyToClipboard() {
   await writeText(`${props.responseText}`);

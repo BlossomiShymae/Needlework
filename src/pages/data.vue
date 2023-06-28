@@ -1,7 +1,7 @@
 <template>
   <div class="m-2">
     <pre class="bg-dark-subtle rounded">
-      <code class="language-json" v-html="html"></code>
+<code class="language-json" v-html="html"></code>
     </pre>
   </div>
 </template>

@@ -114,7 +114,7 @@
         <h6>Response Body</h6>
         <div class="alert alert-secondary overflow-auto mb-1">
           <pre style="max-height: 400px">
-            <code class="language-json" v-html="html"></code>
+<code class="language-json" v-html="html"></code>
           </pre>
           <hr />
           <div class="d-flex justify-content-end">

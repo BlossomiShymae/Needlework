@@ -18,7 +18,7 @@
         <div class="modal-body">
           <div class="alert alert-secondary">
             <pre>
-              <code class="language-json" v-html="html"></code>
+<code class="language-json" v-html="html"></code>
             </pre>
           </div>
         </div>

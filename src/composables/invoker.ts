@@ -75,6 +75,21 @@ export class Invoker {
     })) as any;
   }
 
+  async open_data_window(key: string, payload: any): Promise<void> {
+    return (await invoke("open_data_window", {
+      key,
+      subtitle: `${payload.eventType.toUpperCase()} ${payload.uri}`,
+      payload: JSON.stringify(payload),
+    })) as any;
+  }
+
+  async get_data_payload(key: string): Promise<any> {
+    let string = (await invoke("get_data_payload", {
+      key,
+    })) as any;
+    return JSON.parse(string);
+  }
+
   isValidData(body: any) {
     if (body != null && body !== "") {
       return true;

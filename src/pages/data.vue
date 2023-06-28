@@ -13,12 +13,21 @@ span:first-child {
 </style>
 
 <script lang="ts" setup>
+import { Invoker } from "~/composables/invoker";
+import { inject } from "vue";
 import hljs from "highlight.js";
 import "highlight.js/styles/default.css";
 
+const invoker = inject(Invoker.Key) as Invoker;
+
 const route = useRoute();
-const payload = JSON.stringify(JSON.parse(route.query.payload), null, 2);
-const html = hljs.highlight(payload, { language: "json" }).value.trimStart();
+const key = route.query.key as string;
+const payload = await invoker.get_data_payload(key);
+console.log(key, payload);
+
+const html = hljs
+  .highlight(JSON.stringify(payload, null, 2), { language: "json" })
+  .value.trimStart();
 
 definePageMeta({
   layout: "window",

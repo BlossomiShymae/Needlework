@@ -70,9 +70,12 @@
 
 <script lang="ts" setup>
 import { PhBroom } from "@phosphor-icons/vue";
-import { ref, Ref, computed } from "vue";
+import { ref, Ref, computed, inject } from "vue";
+import { Invoker } from "~/composables/invoker";
 import { listen } from "@tauri-apps/api/event";
-import { WebviewWindow } from "@tauri-apps/api/window";
+import hash from "object-hash";
+
+const invoker = inject(Invoker.Key) as Invoker;
 
 const events: Ref<any[]> = ref([]);
 const filter = ref("");
@@ -105,15 +108,8 @@ function clear() {
   events.value = [];
 }
 
-function openDataWindow(payload: any) {
-  const webview = new WebviewWindow(`data-${payload.timestamp}-window`, {
-    url: `/data?payload=${encodeURI(JSON.stringify(payload))}`,
-  });
-  webview.once("tauri://created", () => {
-    webview.setTitle(
-      `LCU Helper - ${payload.eventType.toUpperCase()} ${payload.uri}`
-    );
-  });
-  webview.once("tauri://error", console.error);
+async function openDataWindow(payload: any) {
+  const key = hash(payload);
+  await invoker.open_data_window(key, payload);
 }
 </script>

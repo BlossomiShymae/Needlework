@@ -206,10 +206,13 @@ pub mod lcu_schema_service {
 pub mod lcu_service {
     use irelia::{rest::LCUClient, RequestClient};
     use serde_json::Value;
-    use std::str;
     use tap::prelude::*;
+    use tauri::State;
 
-    use crate::data::{models::ClientInfo, types::StandardError};
+    use crate::{
+        data::{models::ClientInfo, types::StandardError},
+        Data,
+    };
 
     pub async fn send_request(
         method: &str,
@@ -258,6 +261,32 @@ pub mod lcu_service {
             }),
             Err(e) => Err(StandardError::from_lcu_error(e)),
         }
+    }
+
+    pub async fn produce_payload(
+        key: &str,
+        payload: &str,
+        state: State<'_, Data>,
+    ) -> Result<(), StandardError> {
+        let mut payloads = state.payloads.lock().await;
+        payloads.insert(key.clone().into(), payload.clone().into());
+
+        Ok(())
+    }
+
+    pub async fn consume_payload(
+        key: &str,
+        state: State<'_, Data>,
+    ) -> Result<String, StandardError> {
+        let mut payloads = state.payloads.lock().await;
+        let _key = String::from(key);
+        let payload = payloads
+            .get(&_key)
+            .map_or(Err(StandardError::new("Payload not found")), |v| {
+                Ok(v.to_string())
+            });
+        payloads.remove(&_key);
+        payload
     }
 
     fn deserialize(stream: &str) -> Value {

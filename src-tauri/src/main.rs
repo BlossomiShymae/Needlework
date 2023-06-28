@@ -14,6 +14,7 @@ use tokio::sync::Mutex;
 pub struct Data {
     pub endpoints: Arc<Mutex<HashMap<String, Endpoint>>>,
     pub schemas: Arc<Mutex<HashMap<String, Schema>>>,
+    pub payloads: Arc<Mutex<HashMap<String, String>>>,
 }
 
 impl Data {
@@ -21,6 +22,7 @@ impl Data {
         Data {
             endpoints: Arc::new(Mutex::new(HashMap::new())),
             schemas: Arc::new(Mutex::new(HashMap::new())),
+            payloads: Arc::new(Mutex::new(HashMap::new())),
         }
     }
 }
@@ -36,7 +38,9 @@ fn main() {
             handlers::send_request,
             handlers::get_schema,
             handlers::get_client_info,
-            handlers::get_schemas
+            handlers::get_schemas,
+            handlers::open_data_window,
+            handlers::get_data_payload
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

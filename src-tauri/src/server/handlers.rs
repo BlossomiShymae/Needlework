@@ -1,6 +1,6 @@
 use serde_json::Value;
 use std::collections::HashMap;
-use tauri::State;
+use tauri::{AppHandle, State, WindowBuilder, WindowUrl};
 
 use crate::application::services::{lcu_schema_service, lcu_service};
 use crate::data::metadata::Info;
@@ -51,4 +51,33 @@ pub async fn send_request(
 ) -> Result<Option<Value>, String> {
     let data = lcu_service::send_request(method, path, body).await;
     data.map_err(|e| e.message)
+}
+
+#[tauri::command]
+pub async fn open_data_window(
+    key: &str,
+    subtitle: &str,
+    payload: &str,
+    handle: AppHandle,
+    state: State<'_, Data>,
+) -> Result<(), String> {
+    let _data_window = WindowBuilder::new(
+        &handle,
+        format!("data-{key}-window"),
+        WindowUrl::App(format!("/data?key={key}").parse().unwrap()),
+    )
+    .title(format!("LCU Helper - {subtitle}"))
+    .build()
+    .unwrap();
+
+    lcu_service::produce_payload(key, payload, state)
+        .await
+        .map_err(|e| e.message)
+}
+
+#[tauri::command]
+pub async fn get_data_payload(key: &str, state: State<'_, Data>) -> Result<String, String> {
+    lcu_service::consume_payload(key, state)
+        .await
+        .map_err(|e| e.message)
 }

@@ -10,6 +10,25 @@
   --accent-color-opacity-75: rgb(196, 131, 212, 0.75);
 }
 
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #8f54a0 #ffffff;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+}
+
 .text-decoration-none {
   text-decoration: none;
 }

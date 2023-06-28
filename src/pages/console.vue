@@ -210,7 +210,7 @@ async function execute() {
   const url = encodeURI(requestPath.value);
   clearMessageData();
   try {
-    const data = await invoker.send_request(
+    const data = await invoker.sendRequest(
       method.value,
       url,
       requestBody.value
@@ -218,7 +218,7 @@ async function execute() {
 
     responseBody.value = JSON.stringify(data, null, 2) as any;
     html.value = hljs.highlight(responseBody.value, { language: "json" }).value;
-    clientInfo.value = await invoker.client_info();
+    clientInfo.value = await invoker.clientInfo();
     requestUrl.value = url;
   } catch (e: any) {
     errorMessage.value = e;

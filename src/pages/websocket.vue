@@ -114,6 +114,6 @@ function clear() {
 
 async function openDataWindow(payload: any) {
   const key = hash(payload);
-  await invoker.open_data_window(key, payload);
+  await invoker.openDataWindow(key, payload);
 }
 </script>

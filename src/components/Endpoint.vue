@@ -263,7 +263,7 @@ if (props.requestBody != null) {
   if (_schema != null) {
     let key = _schema.$ref;
     if (key != null) {
-      let schema = await invoker.schema_by_name(key);
+      let schema = await invoker.schemaByName(key);
       schema.name = key.replace("#/components/schemas/", "");
 
       if (schema.type === "object") {
@@ -312,7 +312,7 @@ if (props.responses != null) {
 }
 let responseSchemas: any[] = [];
 if (returnKey != null) {
-  let schema = await invoker.schema_by_name(returnKey);
+  let schema = await invoker.schemaByName(returnKey);
   responseSchemas.push(schema);
 }
 
@@ -350,7 +350,7 @@ async function execute() {
 
   // Send a request to the LCU! 💚
   try {
-    const data = await invoker.send_request(
+    const data = await invoker.sendRequest(
       props.method,
       computedPath,
       jsonBody.value
@@ -360,7 +360,7 @@ async function execute() {
     responseBody.value = JSON.stringify(data, null, 2) as any;
 
     // Get request client information. 💻
-    clientInfo.value = await invoker.client_info();
+    clientInfo.value = await invoker.clientInfo();
   } catch (e: any) {
     errorMessage.value = e;
   }

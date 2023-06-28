@@ -161,6 +161,6 @@ async function openSchemasWindow() {
 }
 
 async function restartApplication() {
-  await invoker.restart_application();
+  await invoker.restartApplication();
 }
 </script>

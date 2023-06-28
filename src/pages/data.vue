@@ -22,7 +22,7 @@ const invoker = inject(Invoker.Key) as Invoker;
 
 const route = useRoute();
 const key = route.query.key as string;
-const payload = await invoker.get_data_payload(key);
+const payload = await invoker.getDataPayload(key);
 console.log(key, payload);
 
 const html = hljs

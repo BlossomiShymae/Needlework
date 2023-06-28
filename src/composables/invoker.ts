@@ -47,7 +47,7 @@ export class Invoker {
     return "Invoker";
   }
 
-  async client_info(): Promise<ClientInfo> {
+  async clientInfo(): Promise<ClientInfo> {
     return (await invoke("get_client_info")) as ClientInfo;
   }
 
@@ -55,7 +55,7 @@ export class Invoker {
     return (await invoke("get_endpoints")) as EndpointMap;
   }
 
-  async endpoint_by_name(name: string): Promise<Endpoint> {
+  async endpointByName(name: string): Promise<Endpoint> {
     return (await invoke("get_endpoint", { name })) as Endpoint;
   }
 
@@ -63,11 +63,11 @@ export class Invoker {
     return (await invoke("get_schemas")) as SchemaMap;
   }
 
-  async schema_by_name(name: string): Promise<Schema> {
+  async schemaByName(name: string): Promise<Schema> {
     return (await invoke("get_schema", { name })) as Schema;
   }
 
-  async send_request(method: string, path: string, body: any): Promise<any> {
+  async sendRequest(method: string, path: string, body: any): Promise<any> {
     return (await invoke("send_request", {
       method,
       path,
@@ -75,7 +75,7 @@ export class Invoker {
     })) as any;
   }
 
-  async open_data_window(key: string, payload: any): Promise<void> {
+  async openDataWindow(key: string, payload: any): Promise<void> {
     return (await invoke("open_data_window", {
       key,
       subtitle: `${payload.eventType.toUpperCase()} ${payload.uri}`,
@@ -83,14 +83,14 @@ export class Invoker {
     })) as any;
   }
 
-  async get_data_payload(key: string): Promise<any> {
+  async getDataPayload(key: string): Promise<any> {
     let string = (await invoke("get_data_payload", {
       key,
     })) as any;
     return JSON.parse(string);
   }
 
-  async restart_application(): Promise<void> {
+  async restartApplication(): Promise<void> {
     await invoke("restart_application");
   }
 

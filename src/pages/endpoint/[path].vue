@@ -23,5 +23,5 @@ const invoker = inject(Invoker.Key) as Invoker;
 const route = useRoute();
 
 const path = route.params.path;
-const endpoint = await invoker.endpoint_by_name(path as string);
+const endpoint = await invoker.endpointByName(path as string);
 </script>

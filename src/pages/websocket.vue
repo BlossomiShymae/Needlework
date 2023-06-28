@@ -36,6 +36,7 @@
           class="list-group-item list-group-item-action"
           v-for="event in filteredEvents"
           :key="event"
+          @click="openDataWindow(event.payload)"
         >
           <span class="text-primary-subtle me-2">{{
             `${getTimestamp(event.payload.timestamp)}`
@@ -71,6 +72,7 @@
 import { PhBroom } from "@phosphor-icons/vue";
 import { ref, Ref, computed } from "vue";
 import { listen } from "@tauri-apps/api/event";
+import { WebviewWindow } from "@tauri-apps/api/window";
 
 const events: Ref<any[]> = ref([]);
 const filter = ref("");
@@ -101,5 +103,17 @@ function getTimestamp(milliseconds: number) {
 
 function clear() {
   events.value = [];
+}
+
+function openDataWindow(payload: any) {
+  const webview = new WebviewWindow(`data-${payload.timestamp}-window`, {
+    url: `/data?payload=${encodeURI(JSON.stringify(payload))}`,
+  });
+  webview.once("tauri://created", () => {
+    webview.setTitle(
+      `LCU Helper - ${payload.eventType.toUpperCase()} ${payload.uri}`
+    );
+  });
+  webview.once("tauri://error", console.error);
 }
 </script>

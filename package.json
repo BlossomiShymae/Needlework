@@ -20,6 +20,7 @@
     "@tauri-apps/api": "^1.4.0",
     "@tauri-apps/cli": "^1.4.0",
     "axios": "^1.4.0",
-    "base-64": "^1.0.0"
+    "base-64": "^1.0.0",
+    "highlight.js": "^11.8.0"
   }
 }

@@ -81,3 +81,9 @@ pub async fn get_data_payload(key: &str, state: State<'_, Data>) -> Result<Strin
         .await
         .map_err(|e| e.message)
 }
+
+#[tauri::command]
+pub async fn restart_application(handle: AppHandle) -> Result<(), String> {
+    handle.restart();
+    Ok(())
+}

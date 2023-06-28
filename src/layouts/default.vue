@@ -50,6 +50,14 @@
           >
             <PhGithubLogo weight="fill" color="black" size="24" />
           </ExternalLink>
+          <div class="vr me-2"></div>
+          <button
+            class="btn btn-secondary hover-dim rounded border-0"
+            @click="restartApplication"
+            title="Restart Application"
+          >
+            <PhArrowsClockwise weight="fill" color="black" size="24" />
+          </button>
         </div>
       </div>
     </header>
@@ -128,6 +136,7 @@ import {
   PhGithubLogo,
   PhHouse,
   PhPlugs,
+  PhArrowsClockwise,
   PhTerminal,
 } from "@phosphor-icons/vue";
 import { Invoker } from "~/composables/invoker";
@@ -149,5 +158,9 @@ async function openSchemasWindow() {
     webview.setTitle("LCU Helper - Schemas");
   });
   webview.once("tauri://error", console.error);
+}
+
+async function restartApplication() {
+  await invoker.restart_application();
 }
 </script>

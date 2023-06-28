@@ -40,7 +40,8 @@ fn main() {
             handlers::get_client_info,
             handlers::get_schemas,
             handlers::open_data_window,
-            handlers::get_data_payload
+            handlers::get_data_payload,
+            handlers::restart_application
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

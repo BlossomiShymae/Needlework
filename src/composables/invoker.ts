@@ -90,6 +90,10 @@ export class Invoker {
     return JSON.parse(string);
   }
 
+  async restart_application(): Promise<void> {
+    await invoke("restart_application");
+  }
+
   isValidData(body: any) {
     if (body != null && body !== "") {
       return true;

@@ -12,9 +12,12 @@
             >Warning
           </h5>
           <p>
-            This application is for testing/educational purposes only. Endpoints
-            like <b>lol-chat</b>, <b>lol-store</b>, <b>riot-client</b>, etc. are
-            associated with bad actors so don't expect much help for those. Okie
+            This tool is for testing/educational purposes only. Please be aware
+            of
+            <ExternalLink href="https://developer.riotgames.com/docs/lol"
+              >current game policies</ExternalLink
+            >
+            and submit a production application when developing an app. Okie
             dokie? {{ `(＾▽＾)` }}
           </p>
         </div>
@@ -42,15 +45,24 @@
         <h3 class="fw-semibold">
           <span class="me-2"
             ><PhGlobe weight="fill" color="black" size="32" /></span
-          >HTTP interface
+          >Data interfaces
         </h3>
-        <p class="text-secondary">
-          A Swagger-like UI is provided to interact with available endpoints.
-        </p>
-        <p class="text-secondary">
-          Schemas for requests and responses can be accessed in the top-left
-          corner.
-        </p>
+        <div class="d-flex flex-column">
+          <NuxtLink
+            to="/console"
+            class="btn btn-secondary hover-dim text-dark text-start mb-3"
+          >
+            <PhTerminal weight="fill" color="black" size="32" class="me-2" />
+            Request Console
+          </NuxtLink>
+          <NuxtLink
+            to="/websocket"
+            class="btn btn-secondary hover-dim text-dark text-start"
+          >
+            <PhPlugs weight="fill" color="black" size="32" class="me-2" />
+            WebSocket Data Viewer
+          </NuxtLink>
+        </div>
       </div>
     </div>
     <hr />
@@ -98,5 +110,7 @@ import {
   PhWarning,
   PhGithubLogo,
   PhPackage,
+  PhTerminal,
+  PhPlugs,
 } from "@phosphor-icons/vue";
 </script>

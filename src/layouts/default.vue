@@ -12,27 +12,31 @@
           <NuxtLink
             class="btn rounded text-decoration-none hover-dim me-2"
             to="/"
+            title="Home"
           >
             <PhHouse weight="fill" color="black" size="24" />
           </NuxtLink>
           <NuxtLink
             class="btn rounded text-decoration-none hover-dim me-2"
             to="/console"
+            title="Request Console"
           >
             <PhTerminal weight="fill" color="black" size="24" />
+          </NuxtLink>
+          <NuxtLink
+            class="btn rounded text-decoration-none hover-dim me-2"
+            to="/websocket"
+            title="WebSocket Data Viewer"
+          >
+            <PhPlugs weight="fill" color="black" size="24" />
           </NuxtLink>
           <button
             class="btn rounded text-decoration-none hover-dim me-2"
             @click="openSchemasWindow"
+            title="Schemas"
           >
             <PhFiles weight="fill" color="black" size="24" />
           </button>
-          <NuxtLink
-            class="btn rounded text-decoration-none hover-dim me-2"
-            to="/websocket"
-          >
-            <PhPlugs weight="fill" color="black" size="24" />
-          </NuxtLink>
         </div>
       </div>
       <div class="grid-content ps-4 w-100">
@@ -42,6 +46,7 @@
             button
             href="https://github.com/BlossomiShymae/lcu-helper"
             class="me-2 hover-dim rounded p-2 border-0"
+            title="GitHub Repository"
           >
             <PhGithubLogo weight="fill" color="black" size="24" />
           </ExternalLink>

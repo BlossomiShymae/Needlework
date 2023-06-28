@@ -1,7 +1,11 @@
 <template>
   <div class="m-2 h-100">
     <div class="input-group input-group-sm mb-2 align-items-center">
-      <button class="btn btn-secondary rounded me-2" @click="clear">
+      <button
+        class="btn btn-secondary rounded me-2"
+        @click="clear"
+        title="Clear"
+      >
         <PhBroom weight="duotone" color="white" size="24" />
       </button>
       <span class="input-group-text">Filter</span>

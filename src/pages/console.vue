@@ -48,7 +48,11 @@
       </div>
       <hr />
       <div class="d-flex justify-content-start mb-2">
-        <button class="btn btn-danger fw-semibold me-2" @click="execute">
+        <button
+          class="btn btn-danger fw-semibold me-2"
+          @click="execute"
+          :disabled="!canExecute"
+        >
           <span><PhGearSix weight="duotone" color="white" size="24" /></span>
           Execute
         </button>
@@ -169,6 +173,11 @@ const html = ref("");
 const method: Ref<any> = ref("get");
 const isRequestBodyEnabled = computed(() => {
   return method.value === "get" ? false : true;
+});
+const canExecute = computed(() => {
+  const path = requestPath.value;
+  if (path == null) return false;
+  return path.trim() == "" ? false : true;
 });
 
 function changeCssClass() {

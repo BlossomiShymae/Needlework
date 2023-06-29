@@ -16,7 +16,12 @@ LCU Helper is an open-source helper tool for the LCU that provides documented en
 
 ## Preview
 
-![lcu-helper-preview](https://github.com/BlossomiShymae/lcu-helper/assets/87099578/25fef644-25c6-44e9-9188-1049aebc9630)
+![lcu-helper-preview-3](https://github.com/BlossomiShymae/lcu-helper/assets/87099578/d39ca3ac-bf51-48a7-b0e8-59c3a8d72783)
+
+## Limitations
+
+- [Endpoints and schemas may not be completely up-to-date.](https://github.com/MingweiSamuel/lcu-schema/issues/5)
+- WebSocket viewer cannot reconnect to the League client if the client is restarted. The Restart Application button can be used as a workaround for now. c:
 
 ## Credits
 

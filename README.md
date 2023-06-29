@@ -6,7 +6,7 @@ LCU Helper is an open-source helper tool for the LCU that provides documented en
 
 ## Download
 
-[LCU Helper can be downloaded from the latest release!](https://github.com/BlossomiShymae/lcu-helper/releases)
+[LCU Helper can be downloaded from the latest release! Currently for Windows only.](https://github.com/BlossomiShymae/lcu-helper/releases)
 
 ## Contributors
 

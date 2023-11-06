@@ -8,7 +8,7 @@ pub mod lcu_schema {
     ) -> Result<Result<LCUSchema, StandardError>, Box<dyn std::error::Error + Send + Sync>> {
         let https = HttpsConnector::new();
         let client = Client::builder().build::<_, hyper::Body>(https);
-        let uri = "https://www.mingweisamuel.com/lcu-schema/lcu/openapi.json".parse()?;
+        let uri = "https://raw.githubusercontent.com/dysolix/hasagi-types/main/swagger.json".parse()?;
         let res = client.get(uri).await?;
 
         if !res.status().is_success() {

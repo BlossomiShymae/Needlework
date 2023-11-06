@@ -152,7 +152,7 @@ async function openSchemasWindow() {
     url: "/schemas",
   });
   webview.once("tauri://created", () => {
-    webview.setTitle("LCU Helper - Schemas");
+    webview.setTitle("Needlework - Schemas");
   });
   webview.once("tauri://error", console.error);
 }

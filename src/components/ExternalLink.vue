@@ -1,6 +1,6 @@
 <template>
   <a
-    :class="`${cssClass} text-decoration-none text-dark`"
+    :class="`${cssClass} text-decoration-none`"
     :href="href"
     target="_blank"
     ><slot></slot

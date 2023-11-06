@@ -2,17 +2,23 @@
 
 :root {
   --website-header-height: 62px;
-  --color: black;
+  --background-color: rgb(1, 10, 10);
+  --color: white;
+  --scrollbar-color: rgb(1, 10, 10);
   --color-opacity-20: rgb(0, 0, 0, 0.2);
-  --accent-color: rgb(196, 131, 212);
-  --accent-color-opacity-20: rgb(196, 131, 212, 0.2);
-  --accent-color-opacity-50: rgb(196, 131, 212, 0.5);
-  --accent-color-opacity-75: rgb(196, 131, 212, 0.75);
+  --accent-color: rgb(39, 221, 221);
+  --accent-color-opacity-20: rgb(39, 221, 221, 0.2);
+  --accent-color-opacity-50: rgb(39, 221, 221, 0.5);
+  --accent-color-opacity-75: rgb(39, 221, 221, 0.75);
+}
+
+html, body {
+  background-color: var(--background-color);
 }
 
 * {
   scrollbar-width: auto;
-  scrollbar-color: #8f54a0 #ffffff;
+  scrollbar-color: var(--accent-color) var(--scrollbar-color);
 }
 
 *::-webkit-scrollbar {
@@ -21,13 +27,13 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: var(--scrollbar-color);
 }
 
 *::-webkit-scrollbar-thumb {
   background-color: var(--accent-color);
   border-radius: 10px;
-  border: 3px solid #ffffff;
+  border: 3px solid var(--scrollbar-color);
 }
 
 .text-decoration-none {

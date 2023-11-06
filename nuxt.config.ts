@@ -11,6 +11,9 @@ export default defineNuxtConfig({
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },
       ],
+      htmlAttrs: {
+        "data-bs-theme": "dark"
+      },
       link: [
         {
           rel: "stylesheet",

@@ -8,7 +8,7 @@
         >
           <h5 class="m-0 mt-2">
             <span class="me-2"
-              ><PhWarning weight="fill" color="black" size="24" /></span
+              ><PhWarning weight="fill" size="24" /></span
             >Warning
           </h5>
           <p>
@@ -27,7 +27,7 @@
       <div class="col-lg-6 mb-3">
         <h3 class="fw-semibold">
           <span class="me-2"
-            ><PhCircuitry weight="fill" color="black" size="32" /></span
+            ><PhCircuitry weight="fill" size="32" /></span
           >Endpoints
         </h3>
         <p class="text-secondary">
@@ -44,22 +44,22 @@
       <div class="col-lg-6 mb-3">
         <h3 class="fw-semibold">
           <span class="me-2"
-            ><PhGlobe weight="fill" color="black" size="32" /></span
+            ><PhGlobe weight="fill" size="32" /></span
           >Data interfaces
         </h3>
         <div class="d-flex flex-column">
           <NuxtLink
             to="/console"
-            class="btn btn-secondary hover-dim text-dark text-start mb-3"
+            class="btn btn-secondary hover-dim text-start mb-3"
           >
-            <PhTerminal weight="fill" color="black" size="32" class="me-2" />
+            <PhTerminal weight="fill" size="32" class="me-2" />
             Request Console
           </NuxtLink>
           <NuxtLink
             to="/websocket"
-            class="btn btn-secondary hover-dim text-dark text-start"
+            class="btn btn-secondary hover-dim text-start"
           >
-            <PhPlugs weight="fill" color="black" size="32" class="me-2" />
+            <PhPlugs weight="fill" size="32" class="me-2" />
             WebSocket Data Viewer
           </NuxtLink>
         </div>
@@ -78,14 +78,14 @@
           <div class="me-2">
             <ExternalLink button href="https://github.com/AlsoSylv/Irelia">
               <span class="me-2"
-                ><PhGithubLogo weight="fill" color="black" size="16" /></span
+                ><PhGithubLogo weight="fill" size="16" /></span
               >Repository
             </ExternalLink>
           </div>
           <div>
             <ExternalLink button href="https://crates.io/crates/irelia">
               <span class="me-2"
-                ><PhPackage weight="fill" color="black" size="16" /></span
+                ><PhPackage weight="fill" size="16" /></span
               >crates.io
             </ExternalLink>
           </div>

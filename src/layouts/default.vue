@@ -1,7 +1,7 @@
 <template>
   <div>
     <header
-      class="container-fluid container-grid sticky-top p-2 bg-accent bg-accent-20"
+      class="container-fluid container-grid sticky-top p-2 bg-transparent"
       style="z-index: 2000; backdrop-filter: blur(4px)"
     >
       <div class="grid-aside w-100">
@@ -14,28 +14,28 @@
             to="/"
             title="Home"
           >
-            <PhHouse weight="fill" color="black" size="24" />
+            <PhHouse weight="fill"  size="24" />
           </NuxtLink>
           <NuxtLink
             class="btn rounded text-decoration-none hover-dim me-2"
             to="/console"
             title="Request Console"
           >
-            <PhTerminal weight="fill" color="black" size="24" />
+            <PhTerminal weight="fill" size="24" />
           </NuxtLink>
           <NuxtLink
             class="btn rounded text-decoration-none hover-dim me-2"
             to="/websocket"
             title="WebSocket Data Viewer"
           >
-            <PhPlugs weight="fill" color="black" size="24" />
+            <PhPlugs weight="fill" size="24" />
           </NuxtLink>
           <button
             class="btn rounded text-decoration-none hover-dim me-2"
             @click="openSchemasWindow"
             title="Schemas"
           >
-            <PhFiles weight="fill" color="black" size="24" />
+            <PhFiles weight="fill" size="24" />
           </button>
         </div>
       </div>
@@ -48,7 +48,7 @@
             class="me-2 hover-dim rounded p-2 border-0"
             title="GitHub Repository"
           >
-            <PhGithubLogo weight="fill" color="black" size="24" />
+            <PhGithubLogo weight="fill" size="24" />
           </ExternalLink>
           <div class="vr me-2"></div>
           <button
@@ -56,7 +56,7 @@
             @click="restartApplication"
             title="Restart Application"
           >
-            <PhArrowsClockwise weight="fill" color="black" size="24" />
+            <PhArrowsClockwise weight="fill"  size="24" />
           </button>
         </div>
       </div>

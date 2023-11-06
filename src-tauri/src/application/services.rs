@@ -143,7 +143,8 @@ pub mod lcu_schema_service {
             let mut schema_ids: Vec<String> = Vec::new();
             if schema_clone._type.eq("object") {
                 // Scan properties for possible schemas
-                let properties = schema_clone.properties.as_mut().unwrap();
+                let default = &mut Map::new();
+                let properties = schema_clone.properties.as_mut().unwrap_or(default);
                 for (_property_name, property) in properties {
                     let property_ref: &mut Map<String, Value> = property.as_object_mut().unwrap();
                     let mut is_schema_ref = false;

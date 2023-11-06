@@ -283,8 +283,9 @@ if (props.requestBody != null) {
 let returnType: any = null;
 let returnKey: any = null;
 if (props.responses != null) {
-  if (props.responses["200"] != null) {
-    const schema = props.responses["200"].content["application/json"].schema;
+  const code = "2XX";
+  if (props.responses[code] != null) {
+    const schema = props.responses[code].content["application/json"].schema;
     const type = schema.type;
     let key = null;
     if (type === "array" || type === "object") {

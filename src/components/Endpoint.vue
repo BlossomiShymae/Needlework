@@ -213,6 +213,8 @@ const props = defineProps<{
   requestBody?: any;
 }>();
 
+console.log(props.path);
+
 const invoker = inject(Invoker.Key) as Invoker;
 
 let bgClass = "";
@@ -284,30 +286,32 @@ let returnType: any = null;
 let returnKey: any = null;
 if (props.responses != null) {
   const code = "2XX";
-  if (props.responses[code] != null) {
+  if (props.responses[code] != null && props.responses[code].content != null) {
     const schema = props.responses[code].content["application/json"].schema;
-    const type = schema.type;
-    let key = null;
-    if (type === "array" || type === "object") {
-      if (type === "array") {
-        const ref = schema.items.$ref;
-        returnKey = ref;
-        if (ref != null) key = ref + "[]";
-      } else {
-        const ref = schema.properties?.$ref ?? schema.additionalProperties.$ref;
+    if (schema != null) {
+      const type = schema.type;
+      let key = null;
+      if (type === "array" || type === "object") {
+        if (type === "array") {
+          const ref = schema.items.$ref;
+          returnKey = ref;
+          if (ref != null) key = ref + "[]";
+        } else {
+          const ref = schema.properties?.$ref ?? schema.additionalProperties.$ref;
+          returnKey = ref;
+          key = ref;
+        }
+      } else if (schema.$ref != null) {
+        const ref = schema.$ref;
         returnKey = ref;
         key = ref;
       }
-    } else if (schema.$ref != null) {
-      const ref = schema.$ref;
-      returnKey = ref;
-      key = ref;
-    }
 
-    if (key != null) {
-      returnType = key.replace("#/components/schemas/", "");
-    } else {
-      returnType = type;
+      if (key != null) {
+        returnType = key.replace("#/components/schemas/", "");
+      } else {
+        returnType = type;
+      }
     }
   }
 }

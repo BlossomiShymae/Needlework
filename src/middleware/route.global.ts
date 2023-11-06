@@ -1,4 +1,4 @@
-// This middleware is here to only prevent a fugly bug with fast page navigation... :c
+// This middleware is here to only attempt to prevent a fugly bug with fast page navigation... :c
 // https://github.com/nuxt/nuxt/issues/13350
 // https://github.com/nuxt/nuxt/issues/13350#issuecomment-1543968330
 export default defineNuxtRouteMiddleware((to, from) => {

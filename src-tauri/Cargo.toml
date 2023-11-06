@@ -24,7 +24,7 @@ tauri = { version = "1.4.0", features = [ "window-set-title", "window-create", "
 tokio = { version = "1.28.2", features = ["full"] }
 hyper = { version = "0.14", features = ["full"] }
 hyper-tls = "0.5.0"
-irelia = { version = "0.3.1", features = [ "full"] }
+irelia = { version = "0.4.0", features = [ "full"] }
 tap = { version = "1.0.1" }
 futures-util = { version = "0.3.28"}
 

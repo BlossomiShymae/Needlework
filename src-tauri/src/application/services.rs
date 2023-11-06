@@ -221,30 +221,30 @@ pub mod lcu_service {
         body: Option<&str>,
     ) -> Result<Option<Value>, StandardError> {
         let client = RequestClient::new();
-        match LCUClient::new(&client) {
+        match LCUClient::new() {
             Ok(lcu_client) => match method {
                 "get" => lcu_client
-                    .get::<Value>(path)
+                    .get::<Value, &str>(path, &client)
                     .await
                     .map_err(StandardError::from_lcu_error),
                 "post" => lcu_client
-                    .post::<Value, Value>(path, body.map(deserialize))
+                    .post::<Value, Value, &str>(path, body.map(deserialize), &client)
                     .await
                     .map_err(StandardError::from_lcu_error),
                 "put" => lcu_client
-                    .put::<Value, Value>(path, body.map(deserialize))
+                    .put::<Value, Value, &str>(path, body.map(deserialize), &client)
                     .await
                     .map_err(StandardError::from_lcu_error),
                 "delete" => lcu_client
-                    .delete::<Value>(path)
+                    .delete::<Value, &str>(path, &client)
                     .await
                     .map_err(StandardError::from_lcu_error),
                 "patch" => lcu_client
-                    .patch::<Value, Value>(path, body.map(deserialize))
+                    .patch::<Value, Value, &str>(path, body.map(deserialize), &client)
                     .await
                     .map_err(StandardError::from_lcu_error),
                 "head" => lcu_client
-                    .head::<Value>(path)
+                    .head::<Value, &str>(path, &client)
                     .await
                     .map_err(StandardError::from_lcu_error),
                 _ => Err(StandardError::new("Invalid method operation")),
@@ -254,8 +254,7 @@ pub mod lcu_service {
     }
 
     pub async fn get_client_info() -> Result<ClientInfo, StandardError> {
-        let client = RequestClient::new();
-        match LCUClient::new(&client) {
+        match LCUClient::new() {
             Ok(lcu_client) => Ok(ClientInfo {
                 url: lcu_client.url().to_string(),
                 auth_header: lcu_client.auth_header().to_string(),

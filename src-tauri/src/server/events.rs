@@ -26,7 +26,7 @@ pub fn inject_events(app: &mut App) -> Result<(), Box<dyn Error>> {
                     while let Some(event) = ws.next().await {
                         match event {
                             Ok(v) => {
-                                let message = v.as_array().unwrap();
+                                let message = v;
                                 let opcode = message.get(0).unwrap().as_i64().unwrap();
                                 let event = message.get(1).unwrap().as_str().unwrap();
                                 let payload: WebSocketPayload =

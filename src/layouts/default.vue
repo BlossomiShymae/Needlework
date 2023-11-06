@@ -6,9 +6,6 @@
     >
       <div class="grid-aside w-100">
         <div class="d-flex align-content-center align-items-center w-100 h-100">
-          <div class="img-fluid img-thumbnail me-2">
-            <img src="/favicon.png" width="32" />
-          </div>
           <NuxtLink
             class="btn rounded text-decoration-none hover-dim me-2"
             to="/"

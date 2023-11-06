@@ -7,7 +7,7 @@
     "distDir": "../.output/public"
   },
   "package": {
-    "productName": "lcu-helper",
+    "productName": "needlework",
     "version": "1.0.0"
   },
   "tauri": {
@@ -106,7 +106,7 @@
         "fullscreen": false,
         "height": 720,
         "resizable": true,
-        "title": "LCU Helper",
+        "title": "Needlework",
         "width": 1280
       }
     ]

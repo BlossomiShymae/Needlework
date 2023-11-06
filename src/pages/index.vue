@@ -1,6 +1,34 @@
 <template>
   <div class="m-2">
-    <p class="fs-2">Welcome to <ApplicationTitle /></p>
+    <div class="row mb-4">
+      <div class="col-lg-8">
+        <p class="fs-2">Welcome to <ApplicationTitle /></p>
+        <p class="fs-5 fw-bold text-light">Get started with LCU development by clicking on any endpoints in 
+          the left panel.
+        </p>
+        <div class="d-flex flex-column">
+          <NuxtLink
+            to="/console"
+            class="btn btn-secondary hover-dim text-start mb-3"
+          >
+            <PhTerminal weight="fill" size="32" class="me-2" />
+            Request Console
+          </NuxtLink>
+          <NuxtLink
+            to="/websocket"
+            class="btn btn-secondary hover-dim text-start"
+          >
+            <PhPlugs weight="fill" size="32" class="me-2" />
+            WebSocket Data Viewer
+          </NuxtLink>
+        </div>
+      </div>
+      <div class="col-lg-4 d-flex justify-content-center align-items-center">
+        <div class="img-fluid">
+            <img class="rounded-circle" src="/favicon.png"/>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col">
         <div
@@ -20,48 +48,6 @@
             and submit a production application when developing an app. Okie
             dokie? {{ `(＾▽＾)` }}
           </p>
-        </div>
-      </div>
-    </div>
-    <div class="row gx-3">
-      <div class="col-lg-6 mb-3">
-        <h3 class="fw-semibold">
-          <span class="me-2"
-            ><PhCircuitry weight="fill" size="32" /></span
-          >Endpoints
-        </h3>
-        <p class="text-secondary">
-          Available LCU endpoints are listed on the left sidebar. Some endpoints
-          may be out of date due to this
-          <ExternalLink
-            href="https://github.com/MingweiSamuel/lcu-schema/issues/5"
-          >
-            issue
-          </ExternalLink>
-          but should relatively be the same.
-        </p>
-      </div>
-      <div class="col-lg-6 mb-3">
-        <h3 class="fw-semibold">
-          <span class="me-2"
-            ><PhGlobe weight="fill" size="32" /></span
-          >Data interfaces
-        </h3>
-        <div class="d-flex flex-column">
-          <NuxtLink
-            to="/console"
-            class="btn btn-secondary hover-dim text-start mb-3"
-          >
-            <PhTerminal weight="fill" size="32" class="me-2" />
-            Request Console
-          </NuxtLink>
-          <NuxtLink
-            to="/websocket"
-            class="btn btn-secondary hover-dim text-start"
-          >
-            <PhPlugs weight="fill" size="32" class="me-2" />
-            WebSocket Data Viewer
-          </NuxtLink>
         </div>
       </div>
     </div>
@@ -93,9 +79,9 @@
 
         <h5>OpenAPI</h5>
         <p class="text-secondary">
-          Endpoints and schemas are provided by MingweiSamuel's
+          Endpoints and schemas are provided by dysolix's
           <ExternalLink href="http://www.mingweisamuel.com/lcu-schema/tool/">
-            hosted OpenAPI file.
+            generated OpenAPI file.
           </ExternalLink>
         </p>
       </div>

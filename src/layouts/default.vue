@@ -41,7 +41,7 @@
           <span class="badge bg-dark me-2">{{ appVersion }}</span>
           <ExternalLink
             button
-            href="https://github.com/BlossomiShymae/lcu-helper"
+            href="https://github.com/BlossomiShymae/Needlework"
             class="me-2 hover-dim rounded p-2 border-0"
             title="GitHub Repository"
           >

@@ -20,7 +20,7 @@
         <div class="col-md-10">
           <div class="input-group h-100">
             <span class="input-group-text">
-              <PhLink weight="regular" color="black" size="16" />
+              <PhLink weight="regular" size="16" />
             </span>
             <div class="form-floating">
               <input
@@ -49,15 +49,15 @@
       <hr />
       <div class="d-flex justify-content-start mb-2">
         <button
-          class="btn btn-danger fw-semibold me-2"
+          class="btn btn-outline-danger fw-semibold me-2"
           @click="execute"
           :disabled="!canExecute"
         >
-          <span><PhGearSix weight="duotone" color="white" size="24" /></span>
+          <span><PhGearSix color="white" size="24" /></span>
           Execute
         </button>
-        <button class="btn btn-secondary fw-semibold me-2" @click="clear">
-          <span><PhBroom weight="duotone" color="white" size="24" /></span>
+        <button class="btn btn-outline-secondary fw-semibold me-2" @click="clear">
+          <span><PhBroom color="white" size="24" /></span>
           Clear
         </button>
       </div>
@@ -84,7 +84,7 @@
         <div class="alert alert-secondary">
           <p class="m-0">
             <span
-              ><PhLockKey weight="fill" color="black" size="16" class="me-2"
+              ><PhLockKey weight="fill" size="16" class="me-1"
             /></span>
             {{ clientInfo.authHeader }}
           </p>
@@ -93,11 +93,11 @@
             <span>
               <PhLockKeyOpen
                 weight="fill"
-                color="black"
                 size="16"
                 class="me-2"
               />
             </span>
+            <span style="color: #fffd89">
             {{
               clientInfo.authHeader
                 .split(" ")
@@ -107,6 +107,7 @@
                 })
                 .join(" ")
             }}
+            </span>
           </p>
         </div>
       </div>
@@ -118,19 +119,19 @@
           </pre>
           <hr />
           <div class="d-flex justify-content-end">
-            <button class="btn btn-secondary ms-2" @click="copyToClipboard">
+            <button class="btn btn-outline-secondary fw-semibold ms-2" @click="copyToClipboard">
               <span
-                ><PhClipboard weight="duotone" color="white" side="24"
+                ><PhClipboard color="white" side="24"
               /></span>
               Copy
             </button>
             <button
-              class="btn btn-secondary ms-2"
+              class="btn btn-outline-secondary fw-semibold ms-2"
               data-bs-target="#modal-console"
               data-bs-toggle="modal"
             >
               <span
-                ><PhArrowsOut weight="duotone" color="white" side="24" />
+                ><PhArrowsOut color="white" side="24" />
               </span>
               Expand
             </button>

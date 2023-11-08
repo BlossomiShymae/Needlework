@@ -23,15 +23,15 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" @click="copyToClipboard">
+          <button class="btn btn-outline-secondary fw-semibold" @click="copyToClipboard">
             <span
-              ><PhClipboard weight="duotone" color="white" side="24"
+              ><PhClipboard color="white" side="24"
             /></span>
             Copy
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-outline-primary fw-semibold" data-bs-dismiss="modal">
             <span>
-              <PhX weight="duotone" color="white" side="24" />
+              <PhX color="white" side="24" />
             </span>
             Close
           </button>

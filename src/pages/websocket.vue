@@ -2,7 +2,7 @@
   <div class="m-2 h-100">
     <div class="input-group input-group-sm mb-2 align-items-center">
       <button
-        class="btn btn-secondary rounded me-2"
+        class="btn btn-outline-secondary rounded me-2"
         @click="clear"
         title="Clear"
       >

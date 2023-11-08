@@ -78,13 +78,13 @@
             </div>
             <hr />
             <div class="d-flex justify-content-start mb-2">
-              <button class="btn btn-danger fw-semibold me-2" @click="execute">
+              <button class="btn btn-outline-danger fw-semibold me-2" @click="execute">
                 <span
-                  ><PhGearSix weight="duotone" color="white" size="24"
+                  ><PhGearSix color="white" size="24"
                 /></span>
                 Execute
               </button>
-              <button class="btn btn-secondary fw-semibold me-2" @click="clear">
+              <button class="btn btn-outline-secondary fw-semibold me-2" @click="clear">
                 <span>
                   <PhBroom weight="duotone" color="white" size="24" />
                 </span>
@@ -120,7 +120,7 @@
                     ><PhLockKey
                       weight="fill"
                       size="16"
-                      class="me-2"
+                      class="me-1"
                   /></span>
                   {{ clientInfo.authHeader }}
                 </p>
@@ -133,6 +133,7 @@
                       class="me-2"
                     />
                   </span>
+                  <span style="color: #fffd89">
                   {{
                     clientInfo.authHeader
                       .split(" ")
@@ -142,6 +143,7 @@
                       })
                       .join(" ")
                   }}
+                  </span>
                 </p>
               </div>
             </div>
@@ -154,22 +156,22 @@
                 <hr />
                 <div class="d-flex justify-content-end">
                   <button
-                    class="btn btn-secondary ms-2"
+                    class="btn btn-outline-secondary fw-semibold ms-2"
                     @click="copyToClipboard"
                   >
                     <span
-                      ><PhClipboard weight="duotone" color="white" side="24"
+                      ><PhClipboard color="white" side="24"
                     /></span>
                     Copy
                   </button>
                   <button
-                    class="btn btn-secondary ms-2"
+                    class="btn btn-outline-secondary fw-semibold ms-2"
                     @click="expandResponseBody"
                     :data-bs-target="`#modal-${hash}`"
                     data-bs-toggle="modal"
                   >
                     <span
-                      ><PhArrowsOut weight="duotone" color="white" side="24" />
+                      ><PhArrowsOut color="white" side="24" />
                     </span>
                     Expand
                   </button>

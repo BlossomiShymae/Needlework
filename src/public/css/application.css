@@ -3,6 +3,7 @@
 :root {
   --website-header-height: 62px;
   --background-color: rgb(1, 10, 10);
+  --secondary-background-color: rgb(1, 30, 30);
   --color: white;
   --scrollbar-color: rgb(1, 10, 10);
   --color-opacity-20: rgb(0, 0, 0, 0.2);
@@ -10,6 +11,36 @@
   --accent-color-opacity-20: rgb(39, 221, 221, 0.2);
   --accent-color-opacity-50: rgb(39, 221, 221, 0.5);
   --accent-color-opacity-75: rgb(39, 221, 221, 0.75);
+}
+
+.hljs-number, .hljs-string {
+  color: var(--accent-color) !important;
+}
+
+.hljs-punctuation {
+  color: var(--color) !important;
+}
+
+.accordion {
+  --bs-accordion-bg: var(--secondary-background-color) !important;
+  --bs-accordion-border-width: 0 !important;
+  --bs-accordion-border-radius: 4px !important;
+}
+
+.form-control {
+  background-color: var(--background-color) !important;
+}
+
+.list-group {
+  --bs-list-group-bg: var(--background-color) !important;
+}
+
+.input-group-text {
+  background-color: var(--secondary-background-color) !important;
+}
+
+.table, .table-dark {
+  --bs-table-bg: transparent !important;
 }
 
 html, body {

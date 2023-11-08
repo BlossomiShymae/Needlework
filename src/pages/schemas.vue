@@ -5,7 +5,7 @@
       <span class="input-group-text">Filter</span>
       <input type="text" class="form-control" v-model="filter" />
     </div>
-    <div v-for="schema in filteredSchemas" class="border mb-2">
+    <div v-for="schema in filteredSchemas" class="mb-2">
       <Schema
         :name="schema.name"
         :description="schema.description"

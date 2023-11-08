@@ -66,7 +66,7 @@ pub async fn open_data_window(
         format!("data-{key}-window"),
         WindowUrl::App(format!("/data?key={key}").parse().unwrap()),
     )
-    .title(format!("LCU Helper - {subtitle}"))
+    .title(format!("Needlework - {subtitle}"))
     .build()
     .unwrap();
 

@@ -80,7 +80,7 @@
         <h5>OpenAPI</h5>
         <p class="text-secondary">
           Endpoints and schemas are provided by dysolix's
-          <ExternalLink href="http://www.mingweisamuel.com/lcu-schema/tool/">
+          <ExternalLink href="https://raw.githubusercontent.com/dysolix/hasagi-types/main/swagger.json">
             generated OpenAPI file.
           </ExternalLink>
         </p>

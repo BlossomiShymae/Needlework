@@ -119,7 +119,6 @@
                   <span
                     ><PhLockKey
                       weight="fill"
-                      color="black"
                       size="16"
                       class="me-2"
                   /></span>
@@ -130,7 +129,6 @@
                   <span>
                     <PhLockKeyOpen
                       weight="fill"
-                      color="black"
                       size="16"
                       class="me-2"
                     />
@@ -212,8 +210,6 @@ const props = defineProps<{
   summary?: string;
   requestBody?: any;
 }>();
-
-console.log(props.path);
 
 const invoker = inject(Invoker.Key) as Invoker;
 

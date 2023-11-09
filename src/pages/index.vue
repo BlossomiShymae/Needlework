@@ -37,16 +37,10 @@
           <h5 class="m-0 mt-2">
             <span class="me-2"
               ><PhWarning weight="fill" size="24" /></span
-            >Warning
+            >Disclaimer
           </h5>
-          <p>
-            This tool is for testing/educational purposes only. Please be aware
-            of
-            <ExternalLink href="https://developer.riotgames.com/docs/lol"
-              >current game policies</ExternalLink
-            >
-            and submit a production application when developing an app. Okie
-            dokie? {{ `(＾▽＾)` }}
+          <p style="font-size: x-small;">
+            THE PROGRAM IS PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED WARRANTIES OF MERCHANTABILITY, NONINFRINGMENT, OR OF FITNESS FOR A PARTICULAR PURPOSE. LICENSOR DOES NOT WARRANT THAT THE FUNCTIONS CONTAINED IN THE PROGRAM WILL MEET YOUR REQUIREMENTS OR THAT OPERATION WILL BE UNINTERRUPTED OR ERROR FREE. LICENSOR MAKES NO WARRANTIES RESPECTING ANY HARM THAT MAY BE CAUSED BY MALICIOUS USE OF THIS SOFTWARE. LICENSOR FURTHER EXPRESSLY DISCLAIMS ANY WARRANTY OR REPRESENTATION TO AUTHORIZED USERS OR TO ANY THIRD PARTY.
           </p>
         </div>
       </div>

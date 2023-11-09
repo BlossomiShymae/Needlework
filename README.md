@@ -16,7 +16,7 @@ Needlework is an open-source helper tool for the LCU that provides documented en
 
 ## Preview
 
-![App preview](app-preview.png)
+![App preview](app-preview.gif)
 
 ## Development
 

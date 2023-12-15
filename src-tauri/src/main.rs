@@ -1,19 +1,21 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-pub mod application;
 pub mod data;
-pub mod server;
+pub mod events;
+pub mod handlers;
+pub mod lcu;
+pub mod lcu_schema;
 
 use std::{collections::HashMap, sync::Arc};
 
-use data::models::{Endpoint, Schema};
-use server::{events::inject_events, handlers};
+use data::{Endpoint, PluginSchema};
+use events::inject_events;
 use tokio::sync::Mutex;
 
 pub struct Data {
     pub endpoints: Arc<Mutex<HashMap<String, Endpoint>>>,
-    pub schemas: Arc<Mutex<HashMap<String, Schema>>>,
+    pub schemas: Arc<Mutex<HashMap<String, PluginSchema>>>,
     pub payloads: Arc<Mutex<HashMap<String, String>>>,
 }
 

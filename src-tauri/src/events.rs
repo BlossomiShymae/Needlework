@@ -11,7 +11,7 @@ use irelia::{
 use tauri::{App, Manager};
 use tokio::time::{sleep_until, Instant};
 
-use crate::data::models::{WebSocketMessage, WebSocketPayload};
+use crate::data::{WebSocketMessage, WebSocketPayload};
 
 pub fn inject_events(app: &mut App) -> Result<(), Box<dyn Error>> {
     let handle = app.handle();

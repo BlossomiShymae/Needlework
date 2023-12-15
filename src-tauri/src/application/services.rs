@@ -85,7 +85,7 @@ pub mod lcu_schema_service {
                     request_body: operation.request_body.clone(),
                 });
 
-                let value = endpoints
+                let mut value = endpoints
                     .get_mut(&key_name)
                     .map(|endpoint| Endpoint {
                         plugins: endpoint
@@ -98,6 +98,10 @@ pub mod lcu_schema_service {
                     .unwrap_or(Endpoint {
                         plugins: plugins.clone(),
                     });
+
+                // Sort endpoint paths alphabetically
+                value.plugins.sort_by_key(|k| k.path.to_lowercase());
+
                 endpoints.insert(key_name.clone(), value);
             }
         }

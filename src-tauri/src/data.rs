@@ -1,57 +1,16 @@
 use std::collections::HashMap;
 
+use irelia::rest::types::Parameter;
+use irelia::rest::types::Property;
+use irelia::rest::types::RequestBody;
+use irelia::rest::types::Type;
+use irelia::rest::types::Responses;
 use serde::Deserialize;
 use serde::Serialize;
-use serde_json::Map;
 use serde_json::Value;
 use std::{error::Error, fmt};
 
 use irelia::LCUError;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct LCUSchema {
-    pub components: Components,
-    pub info: Info,
-    pub openapi: String,
-    pub paths: HashMap<String, HashMap<String, Operation>>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Info {
-    pub title: String,
-    pub version: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Components {
-    pub schemas: HashMap<String, Schema>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Schema {
-    pub description: Option<String>,
-    pub properties: Option<Map<String, Value>>,
-    #[serde(rename = "enum")]
-    pub _enum: Option<Vec<String>>,
-    #[serde(rename = "type")]
-    pub _type: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Operation {
-    pub description: Option<String>,
-    pub operation_id: String,
-    pub parameters: Vec<Value>,
-    pub responses: Option<Map<String, Value>>,
-    pub summary: Option<String>,
-    pub tags: Vec<String>,
-    pub request_body: Option<Map<String, Value>>,
-}
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -66,10 +25,10 @@ pub struct Plugin {
     pub path: String,
     pub description: Option<String>,
     pub operation_id: String,
-    pub parameters: Vec<Value>,
-    pub responses: Option<Map<String, Value>>,
+    pub parameters: Vec<Parameter>,
+    pub responses: Option<HashMap<String, Responses>>,
     pub summary: Option<String>,
-    pub request_body: Option<Map<String, Value>>,
+    pub request_body: Option<RequestBody>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -77,11 +36,11 @@ pub struct Plugin {
 pub struct PluginSchema {
     pub name: String,
     pub description: Option<String>,
-    pub properties: Option<Map<String, Value>>,
+    pub properties: Option<HashMap<String, Property>>,
     #[serde(rename = "enum")]
     pub _enum: Option<Vec<String>>,
     #[serde(rename = "type")]
-    pub _type: String,
+    pub _type: Type,
     pub schema_ids: Vec<String>,
 }
 
@@ -128,8 +87,10 @@ impl StandardError {
             message: error.to_string(),
         }
     }
+}
 
-    pub fn from_lcu_error(error: LCUError) -> StandardError {
+impl From<LCUError> for StandardError {
+    fn from(error: LCUError) -> Self {
         StandardError {
             message: error.to_string(),
         }

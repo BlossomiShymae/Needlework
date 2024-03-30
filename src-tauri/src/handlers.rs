@@ -1,8 +1,9 @@
+use irelia::rest::types::Info;
 use serde_json::Value;
 use std::collections::HashMap;
 use tauri::{AppHandle, State, WindowBuilder, WindowUrl};
 
-use crate::data::{ClientInfo, Endpoint, Info, PluginSchema};
+use crate::data::{ClientInfo, Endpoint, PluginSchema};
 use crate::lcu;
 use crate::lcu_schema;
 use crate::Data;

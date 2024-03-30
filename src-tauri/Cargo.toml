@@ -22,9 +22,7 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.4.0", features = [ "window-set-title", "window-create", "shell-open", "clipboard-write-text"] }
 tokio = { version = "1.28.2", features = ["full"] }
-hyper = { version = "0.14", features = ["full"] }
-hyper-tls = "0.5.0"
-irelia = { version = "0.4.0", features = [ "full"] }
+irelia = { version = "0.5.5" }
 tap = { version = "1.0.1" }
 futures-util = { version = "0.3.28"}
 

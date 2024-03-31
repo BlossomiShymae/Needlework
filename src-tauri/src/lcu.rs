@@ -8,6 +8,7 @@ use crate::{
     Data,
 };
 
+// Changed to take advantage of the `?` operator
 pub async fn send_request(
     method: &str,
     path: &str,
@@ -16,25 +17,25 @@ pub async fn send_request(
     let client = RequestClient::new();
     let lcu_client = LCUClient::new()?;
     let maybe_value = match method {
-        "get" => lcu_client
-            .get::<Value, &str>(path, &client)
-            .await?,
-        "post" => lcu_client
-            .post::<Value, Value, &str>(path, body.map(deserialize), &client)
-            .await?,
-        "put" => lcu_client
-            .put::<Value, Value, &str>(path, body.map(deserialize), &client)
-            .await?,
-        "delete" => lcu_client
-            .delete::<Value, &str>(path, &client)
-            .await?,
-        "patch" => lcu_client
-            .patch::<Value, Value, &str>(path, body.map(deserialize), &client)
-            .await?,
-        "head" => lcu_client
-            .head::<Value, &str>(path, &client)
-            .await?,
-        _ => Err(StandardError::new("Invalid method operation"))?,
+        "get" => lcu_client.get::<Value, &str>(path, &client).await?,
+        "post" => {
+            lcu_client
+                .post::<Value, Value, &str>(path, body.map(deserialize), &client)
+                .await?
+        }
+        "put" => {
+            lcu_client
+                .put::<Value, Value, &str>(path, body.map(deserialize), &client)
+                .await?
+        }
+        "delete" => lcu_client.delete::<Value, &str>(path, &client).await?,
+        "patch" => {
+            lcu_client
+                .patch::<Value, Value, &str>(path, body.map(deserialize), &client)
+                .await?
+        }
+        "head" => lcu_client.head::<Value, &str>(path, &client).await?,
+        _ => Err(StandardError::new_str("Invalid method operation"))?,
     };
     Ok(maybe_value)
 }
@@ -60,14 +61,11 @@ pub async fn produce_payload(
 
 pub async fn consume_payload(key: &str, state: State<'_, Data>) -> Result<String, StandardError> {
     let mut payloads = state.payloads.lock().await;
-    let _key = String::from(key);
-    let payload = payloads
-        .get(&_key)
-        .map_or(Err(StandardError::new("Payload not found")), |v| {
-            Ok(v.to_string())
-        });
-    payloads.remove(&_key);
-    payload
+    // Since the value was gotten, and then removed to return, this reduces the lookup count
+    // Syntax changes thanks to clippy
+    payloads
+        .remove(key)
+        .ok_or(StandardError::new_str("Payload not found"))
 }
 
 fn deserialize(stream: &str) -> Value {

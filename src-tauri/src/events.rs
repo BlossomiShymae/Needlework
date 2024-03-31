@@ -20,7 +20,7 @@ pub fn inject_events(app: &mut App) -> Result<(), Box<dyn Error>> {
         match LCUWebSocket::new(move |event| match event {
             Ok(v) => {
                 let message = v;
-                let opcode = message.get(0).unwrap().as_i64().unwrap();
+                let opcode = message.first().unwrap().as_i64().unwrap();
                 let event = message.get(1).unwrap().as_str().unwrap();
                 let payload: WebSocketPayload =
                     serde_json::from_value(message.get(2).unwrap().clone()).unwrap();

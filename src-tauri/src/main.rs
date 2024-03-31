@@ -13,26 +13,18 @@ use data::{Endpoint, PluginSchema};
 use events::inject_events;
 use tokio::sync::Mutex;
 
+#[derive(Default)]
 pub struct Data {
     pub endpoints: Arc<Mutex<HashMap<String, Endpoint>>>,
     pub schemas: Arc<Mutex<HashMap<String, PluginSchema>>>,
     pub payloads: Arc<Mutex<HashMap<String, String>>>,
 }
 
-impl Data {
-    pub fn new() -> Data {
-        Data {
-            endpoints: Arc::new(Mutex::new(HashMap::new())),
-            schemas: Arc::new(Mutex::new(HashMap::new())),
-            payloads: Arc::new(Mutex::new(HashMap::new())),
-        }
-    }
-}
-
 fn main() {
     tauri::Builder::default()
-        .setup(|app| inject_events(app))
-        .manage(Data::new())
+        // Use the function pointer directly, clippy lint
+        .setup(inject_events)
+        .manage(Data::default())
         .invoke_handler(tauri::generate_handler![
             handlers::get_info,
             handlers::get_endpoints,

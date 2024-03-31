@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use irelia::rest::types::Parameter;
 use irelia::rest::types::Property;
 use irelia::rest::types::RequestBody;
-use irelia::rest::types::Type;
 use irelia::rest::types::Responses;
+use irelia::rest::types::Type;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::Value;
@@ -76,12 +76,18 @@ pub struct StandardError {
 }
 
 impl StandardError {
-    pub fn new(message: &str) -> StandardError {
+    // Doing this helps avoid allocations in the case on an error
+    pub fn new(message: String) -> StandardError {
+        StandardError { message }
+    }
+
+    pub fn new_str(message: &str) -> StandardError {
         StandardError {
-            message: message.to_string(),
+            message: message.to_owned(),
         }
     }
 
+    // This function is current unused
     pub fn from_error(error: impl Error) -> StandardError {
         StandardError {
             message: error.to_string(),
@@ -89,6 +95,7 @@ impl StandardError {
     }
 }
 
+// Instead of using .map_err(), implementing from allows us of the `?` operator to do so automatically
 impl From<LCUError> for StandardError {
     fn from(error: LCUError) -> Self {
         StandardError {
@@ -102,5 +109,12 @@ impl Error for StandardError {}
 impl fmt::Display for StandardError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "something has gone wrong")
+    }
+}
+
+// Instead of using .map_err(), implementing from allows us of the `?` operator to do so automatically
+impl From<StandardError> for String {
+    fn from(error: StandardError) -> Self {
+        error.message
     }
 }

@@ -128,36 +128,36 @@ pub async fn get_schemas(
             let mut schema_ids: Vec<String> = Vec::new();
             if schema_value.schema_type == Some(Type::Object) {
                 // Scan properties for possible schemas
-                let default = &mut HashMap::new();
-                let properties = schema_value.properties.as_mut().unwrap_or(default);
-                // The first field was ignored, so just iter values instead
-                for property in properties.values_mut() {
-                    // Change .as_ref().map() to if let Some() as per clippy lints
-                    if let Some(schema_id) = &mut property.property_ref {
-                        schema_ids.push(schema_id.clone());
-                        *schema_id = schema_id.replace("#/components/schemas/", "");
-                    };
-                    let mut unset_prop_type = false;
-                    if let Some(_type) = &property.property_type {
-                        // This used to alter the `property_type` field every time, but because the structs in
-                        // irelia don't use value, property_ref is altered instead
-                        if *_type == Type::Array {
-                            if let Some(items) = &property.items {
-                                if let Some(v) = &items.property_ref {
-                                    let parameter_type = v.replace("#/components/schemas/", "");
-                                    property.property_ref = Some(format!("{parameter_type}[]"));
-                                    unset_prop_type = true;
+                if let Some(properties) = &mut schema_value.properties {
+                    // The first field was ignored, so just iter values instead
+                    for property in properties.values_mut() {
+                        // Change .as_ref().map() to if let Some() as per clippy lints
+                        if let Some(schema_id) = &mut property.property_ref {
+                            schema_ids.push(schema_id.clone());
+                            *schema_id = schema_id.replace("#/components/schemas/", "");
+                        };
+                        let mut unset_prop_type = false;
+                        if let Some(_type) = &property.property_type {
+                            // This used to alter the `property_type` field every time, but because the structs in
+                            // irelia don't use value, property_ref is altered instead
+                            if *_type == Type::Array {
+                                if let Some(items) = &property.items {
+                                    if let Some(v) = &items.property_ref {
+                                        let parameter_type = v.replace("#/components/schemas/", "");
+                                        property.property_ref = Some(format!("{parameter_type}[]"));
+                                        unset_prop_type = true;
+                                    };
+                                    if let Some(v) = &items.property_type {
+                                        property.property_ref = Some(format!("{:?}[]", v));
+                                    };
                                 };
-                                if let Some(v) = &items.property_type {
-                                    property.property_ref = Some(format!("{:?}[]", v));
-                                };
-                            };
-                        }
-                    };
+                            }
+                        };
 
-                    // Unset the type here, this is needed for the front end
-                    if unset_prop_type {
-                        property.property_type = None;
+                        // Unset the type here, this is needed for the front end
+                        if unset_prop_type {
+                            property.property_type = None;
+                        }
                     }
                 }
             }

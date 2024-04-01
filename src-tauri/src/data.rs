@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use hashlink::linked_hash_map::LinkedHashMap as HashMap;
 
 use irelia::rest::types::Parameter;
 use irelia::rest::types::Property;
@@ -23,7 +23,7 @@ pub struct Endpoint {
 pub struct Plugin {
     pub method: String,
     pub path: String,
-    pub description: Option<String>,
+    pub description: String,
     pub operation_id: String,
     pub parameters: Vec<Parameter>,
     pub responses: Option<HashMap<String, Responses>>,

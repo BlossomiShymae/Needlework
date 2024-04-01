@@ -85,6 +85,7 @@ name = "app"
 version = "1.0.0"
 dependencies = [
  "futures-util",
+ "hashlink",
  "irelia",
  "serde",
  "serde_json",

@@ -1,57 +1,16 @@
-use std::collections::HashMap;
+use hashlink::linked_hash_map::LinkedHashMap as HashMap;
 
+use irelia::rest::types::Parameter;
+use irelia::rest::types::Property;
+use irelia::rest::types::RequestBody;
+use irelia::rest::types::Responses;
+use irelia::rest::types::Type;
 use serde::Deserialize;
 use serde::Serialize;
-use serde_json::Map;
 use serde_json::Value;
 use std::{error::Error, fmt};
 
 use irelia::LCUError;
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct LCUSchema {
-    pub components: Components,
-    pub info: Info,
-    pub openapi: String,
-    pub paths: HashMap<String, HashMap<String, Operation>>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Info {
-    pub title: String,
-    pub version: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Components {
-    pub schemas: HashMap<String, Schema>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Schema {
-    pub description: Option<String>,
-    pub properties: Option<Map<String, Value>>,
-    #[serde(rename = "enum")]
-    pub _enum: Option<Vec<String>>,
-    #[serde(rename = "type")]
-    pub _type: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Operation {
-    pub description: Option<String>,
-    pub operation_id: String,
-    pub parameters: Vec<Value>,
-    pub responses: Option<Map<String, Value>>,
-    pub summary: Option<String>,
-    pub tags: Vec<String>,
-    pub request_body: Option<Map<String, Value>>,
-}
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -64,12 +23,12 @@ pub struct Endpoint {
 pub struct Plugin {
     pub method: String,
     pub path: String,
-    pub description: Option<String>,
+    pub description: String,
     pub operation_id: String,
-    pub parameters: Vec<Value>,
-    pub responses: Option<Map<String, Value>>,
+    pub parameters: Vec<Parameter>,
+    pub responses: Option<HashMap<String, Responses>>,
     pub summary: Option<String>,
-    pub request_body: Option<Map<String, Value>>,
+    pub request_body: Option<RequestBody>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -77,11 +36,11 @@ pub struct Plugin {
 pub struct PluginSchema {
     pub name: String,
     pub description: Option<String>,
-    pub properties: Option<Map<String, Value>>,
+    pub properties: Option<HashMap<String, Property>>,
     #[serde(rename = "enum")]
     pub _enum: Option<Vec<String>>,
     #[serde(rename = "type")]
-    pub _type: String,
+    pub _type: Type,
     pub schema_ids: Vec<String>,
 }
 
@@ -117,19 +76,28 @@ pub struct StandardError {
 }
 
 impl StandardError {
-    pub fn new(message: &str) -> StandardError {
+    // Doing this helps avoid allocations in the case on an error
+    pub fn new(message: String) -> StandardError {
+        StandardError { message }
+    }
+
+    pub fn new_str(message: &str) -> StandardError {
         StandardError {
-            message: message.to_string(),
+            message: message.to_owned(),
         }
     }
 
+    // This function is current unused
     pub fn from_error(error: impl Error) -> StandardError {
         StandardError {
             message: error.to_string(),
         }
     }
+}
 
-    pub fn from_lcu_error(error: LCUError) -> StandardError {
+// Instead of using .map_err(), implementing from allows us of the `?` operator to do so automatically
+impl From<LCUError> for StandardError {
+    fn from(error: LCUError) -> Self {
         StandardError {
             message: error.to_string(),
         }
@@ -141,5 +109,12 @@ impl Error for StandardError {}
 impl fmt::Display for StandardError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "something has gone wrong")
+    }
+}
+
+// Instead of using .map_err(), implementing from allows us of the `?` operator to do so automatically
+impl From<StandardError> for String {
+    fn from(error: StandardError) -> Self {
+        error.message
     }
 }

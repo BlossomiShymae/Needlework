@@ -1,30 +1,30 @@
 use std::collections::HashMap;
 
-use serde_json::{json, Map, Value};
+use irelia::rest::types::Info;
+use irelia::rest::types::Schema;
+use irelia::rest::types::Type;
 use tauri::State;
 
-use crate::data::{Endpoint, Info, LCUSchema, Plugin, PluginSchema, StandardError};
+use crate::data::Endpoint;
+use crate::data::Plugin;
+use crate::data::PluginSchema;
+use crate::data::StandardError;
 use crate::lcu_schema;
 use crate::Data;
 
-use hyper::{body, Client};
-use hyper_tls::HttpsConnector;
-
 pub async fn get_info() -> Result<Info, StandardError> {
-    let data = lcu_schema::fetch().await.unwrap();
-    data.map(|data| data.info)
+    let data = lcu_schema::fetch().await?;
+    Ok(data.info)
 }
 
 pub async fn get_endpoint(name: &str, state: State<'_, Data>) -> Result<Endpoint, StandardError> {
-    let data = get_endpoints(state).await;
-    match data {
-        Ok(v) => match v.get(name) {
-            Some(value) => Ok(value.clone()),
-            None => Err(StandardError::new(
-                format!("Invalid endpoint key: {}", name).as_str(),
-            )),
-        },
-        Err(e) => Err(e),
+    let data = get_endpoints(state).await?;
+    match data.get(name) {
+        Some(value) => Ok(value.clone()),
+        None => Err(StandardError::new(format!(
+            "Invalid endpoint key: {}",
+            name
+        ))),
     }
 }
 
@@ -38,12 +38,10 @@ pub async fn get_endpoints(
         }
     }
 
-    let data = lcu_schema::fetch().await.unwrap();
-    if data.is_err() {
-        return Err(data.unwrap_err());
-    }
+    let data = lcu_schema::fetch().await?;
+
     let mut endpoints: HashMap<String, Endpoint> = HashMap::new();
-    for (path, operations) in data.unwrap().paths {
+    for (path, operations) in data.paths {
         for (method, operation) in operations {
             let mut plugins: Vec<Plugin> = Vec::new();
             let mut key_name: String = "_unknown".to_string();
@@ -64,42 +62,36 @@ pub async fn get_endpoints(
                             continue;
                         }
                         x if lowercase_tag.contains("plugin ") => {
-                            key_name = x.split(" ").last().unwrap().into()
+                            // Replace with space char, as per request of clippy
+                            key_name = x.split(' ').last().unwrap().into()
                         }
-                        _ => key_name = lowercase_tag.clone().into(),
+                        _ => key_name = lowercase_tag,
                     }
                     break;
                 }
             }
+            // Because the schema isn't pulling from a cache, we don't actually need to clone these values
             plugins.push(Plugin {
-                method: method.clone(),
+                method,
                 path: path.clone(),
-                description: operation.description.clone(),
-                operation_id: operation.operation_id.clone(),
-                parameters: operation.parameters.clone(),
-                responses: operation.responses.clone(),
-                summary: operation.summary.clone(),
-                request_body: operation.request_body.clone(),
+                description: operation.description,
+                operation_id: operation.operation_id,
+                parameters: operation.parameters,
+                responses: operation.responses,
+                summary: operation.summary,
+                request_body: operation.request_body,
             });
 
-            let mut value = endpoints
-                .get_mut(&key_name)
-                .map(|endpoint| Endpoint {
-                    plugins: endpoint
-                        .plugins
-                        .clone()
-                        .into_iter()
-                        .chain(plugins.clone().into_iter())
-                        .collect(),
-                })
-                .unwrap_or(Endpoint {
-                    plugins: plugins.clone(),
-                });
-
-            // Sort endpoint paths alphabetically
-            value.plugins.sort_by_key(|k| k.path.to_lowercase());
-
-            endpoints.insert(key_name.clone(), value);
+            // map or else performs slightly better
+            if let Some(endpoint) = endpoints.get_mut(&key_name) {
+                // Extend the plugins list directly
+                endpoint.plugins.extend(plugins);
+                // Sort endpoint paths alphabetically
+                endpoint.plugins.sort_by_key(|k| k.path.to_lowercase());
+            } else {
+                // Insert into the list if it does not exist already
+                endpoints.insert(key_name.clone(), Endpoint { plugins });
+            };
         }
     }
 
@@ -111,15 +103,10 @@ pub async fn get_endpoints(
 }
 
 pub async fn get_schema(name: &str, state: State<'_, Data>) -> Result<PluginSchema, StandardError> {
-    let data = get_schemas(state).await;
-    match data {
-        Ok(v) => match v.get(name) {
-            Some(value) => Ok(value.clone()),
-            None => Err(StandardError::new(
-                format!("Invalid schema key: {}", name).as_str(),
-            )),
-        },
-        Err(e) => Err(e),
+    let data = get_schemas(state).await?;
+    match data.get(name) {
+        Some(value) => Ok(value.clone()),
+        None => Err(StandardError::new(format!("Invalid schema key: {}", name))),
     }
 }
 
@@ -133,68 +120,63 @@ pub async fn get_schemas(
         }
     }
 
-    let data = lcu_schema::fetch().await.unwrap();
-    if data.is_err() {
-        return Err(data.unwrap_err());
-    }
-    let mut schemas: HashMap<String, PluginSchema> = HashMap::new();
-    for (k, schema) in data.unwrap().components.schemas {
-        let mut schema_clone = schema.clone();
-        // Scan for all descendent schemas for object-type schemas
-        let mut schema_ids: Vec<String> = Vec::new();
-        if schema_clone._type.eq("object") {
-            // Scan properties for possible schemas
-            let default = &mut Map::new();
-            let properties = schema_clone.properties.as_mut().unwrap_or(default);
-            for (_property_name, property) in properties {
-                let property_ref: &mut Map<String, Value> = property.as_object_mut().unwrap();
-                let mut is_schema_ref = false;
-                let mut is_array = false;
-                let mut type_value: Value = json!("");
-                property_ref.get_mut("$ref").map(|v| {
-                    let schema_id = v.as_str().unwrap().to_string();
-                    schema_ids.push(schema_id.clone());
-                    type_value = json!(schema_id.replace("#/components/schemas/", ""));
-                    is_schema_ref = true;
-                });
-                property_ref.get("type").map(|v| {
-                    let _type = v.as_str().unwrap();
-                    if _type.eq("array") {
-                        let mut parameter_type = "";
-                        property_ref.get("items").map(|v| {
-                            let items: &Map<String, Value> = v.as_object().unwrap();
-                            items.get("$ref").map(|v| {
-                                parameter_type = v.as_str().clone().unwrap();
-                            });
-                            items.get("type").map(|v| {
-                                parameter_type = v.as_str().clone().unwrap();
-                            });
-                        });
-                        type_value = json!("x[]".replace(
-                            "x",
-                            parameter_type.replace("#/components/schemas/", "").as_str()
-                        ));
-                        is_array = true;
-                    }
-                });
+    let data = lcu_schema::fetch().await?;
+    // Build this directly from an iterator, rather than making a new one with a for loop
+    let schemas = HashMap::from_iter(data.components.schemas.into_iter().map(
+        |(k, mut schema_value)| {
+            // Scan for all descendent schemas for object-type schemas
+            let mut schema_ids: Vec<String> = Vec::new();
+            if schema_value.schema_type == Some(Type::Object) {
+                // Scan properties for possible schemas
+                if let Some(properties) = &mut schema_value.properties {
+                    // The first field was ignored, so just iter values instead
+                    for property in properties.values_mut() {
+                        // Change .as_ref().map() to if let Some() as per clippy lints
+                        if let Some(schema_id) = &mut property.property_ref {
+                            schema_ids.push(schema_id.clone());
+                            *schema_id = schema_id.replace("#/components/schemas/", "");
+                        };
+                        let mut unset_prop_type = false;
+                        if let Some(_type) = &property.property_type {
+                            // This used to alter the `property_type` field every time, but because the structs in
+                            // irelia don't use value, property_ref is altered instead
+                            if *_type == Type::Array {
+                                if let Some(items) = &property.items {
+                                    if let Some(v) = &items.property_ref {
+                                        let parameter_type = v.replace("#/components/schemas/", "");
+                                        property.property_ref = Some(format!("{parameter_type}[]"));
+                                        unset_prop_type = true;
+                                    };
+                                    if let Some(v) = &items.property_type {
+                                        property.property_ref = Some(format!("{:?}[]", v));
+                                    };
+                                };
+                            }
+                        };
 
-                if is_schema_ref || is_array {
-                    property_ref.insert("type".into(), type_value);
+                        // Unset the type here, this is needed for the front end
+                        if unset_prop_type {
+                            property.property_type = None;
+                        }
+                    }
                 }
             }
-        }
-        schemas.insert(
-            ["#/components/schemas/", k.clone().as_str()].concat(),
-            PluginSchema {
-                name: k,
-                description: schema_clone.description,
-                properties: schema_clone.properties,
-                _enum: schema_clone._enum,
-                _type: schema_clone._type,
-                schema_ids: schema_ids.clone(),
-            },
-        );
-    }
+
+            // Reduce clones of data
+            (
+                ["#/components/schemas/", k.as_str()].concat(),
+                PluginSchema {
+                    name: k,
+                    description: schema_value.description,
+                    properties: schema_value.properties,
+                    _enum: schema_value.schema_enum,
+                    // This is safe, I checked, will fix in next Irelia release
+                    _type: schema_value.schema_type.unwrap(),
+                    schema_ids,
+                },
+            )
+        },
+    ));
 
     {
         let mut _schemas = state.schemas.lock().await;
@@ -204,20 +186,9 @@ pub async fn get_schemas(
     Ok(schemas)
 }
 
-pub async fn fetch(
-) -> Result<Result<LCUSchema, StandardError>, Box<dyn std::error::Error + Send + Sync>> {
-    let https = HttpsConnector::new();
-    let client = Client::builder().build::<_, hyper::Body>(https);
-    let uri = "https://raw.githubusercontent.com/dysolix/hasagi-types/main/swagger.json".parse()?;
-    let res = client.get(uri).await?;
-
-    if !res.status().is_success() {
-        return Ok(Err(StandardError::new(
-            format!("Response not success: {}", res.status()).as_str(),
-        )));
-    }
-
-    let bytes = body::to_bytes(res.into_body()).await?;
-    let data: LCUSchema = serde_json::from_slice(&bytes.to_vec()).unwrap();
-    Ok(Ok(data))
+// This can be changed to Result<Schema, Error> now, as that's all it does
+pub async fn fetch() -> Result<Schema, StandardError> {
+    const REMOTE: &str = "https://raw.githubusercontent.com/dysolix/hasagi-types/main/swagger.json";
+    let schema = irelia::rest::LCUClient::schema(REMOTE).await?;
+    Ok(schema)
 }

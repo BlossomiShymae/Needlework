@@ -16,7 +16,8 @@
         <tbody v-if="schema.type === 'object'">
           <tr v-for="(property, name, index) in schema.properties">
             <th scope="row">{{ name }}</th>
-            <td>{{ property.type }}</td>
+            <!-- Check if type is set, if not, $ref should be set -->
+            <td>{{ property.type ?? property.$ref }}</td>
           </tr>
         </tbody>
         <tbody v-else>

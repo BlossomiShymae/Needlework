@@ -1,46 +1,47 @@
+use irelia::rest::types::Info;
 use serde_json::Value;
 use std::collections::HashMap;
 use tauri::{AppHandle, State, WindowBuilder, WindowUrl};
 
-use crate::data::{ClientInfo, Endpoint, Info, PluginSchema};
+use crate::data::{ClientInfo, Endpoint, PluginSchema};
 use crate::lcu;
 use crate::lcu_schema;
 use crate::Data;
 
 #[tauri::command]
 pub async fn get_info() -> Result<Info, String> {
-    let data = lcu_schema::get_info().await;
-    data.map_err(|e| e.message)
+    let data = lcu_schema::get_info().await?;
+    Ok(data)
 }
 
 #[tauri::command]
 pub async fn get_client_info() -> Result<ClientInfo, String> {
-    let data = lcu::get_client_info().await;
-    data.map_err(|e| e.message)
+    let data = lcu::get_client_info().await?;
+    Ok(data)
 }
 
 #[tauri::command]
 pub async fn get_endpoints(state: State<'_, Data>) -> Result<HashMap<String, Endpoint>, String> {
-    let data = lcu_schema::get_endpoints(state).await;
-    data.map_err(|e| e.message)
+    let data = lcu_schema::get_endpoints(state).await?;
+    Ok(data)
 }
 
 #[tauri::command]
 pub async fn get_endpoint(name: &str, state: State<'_, Data>) -> Result<Endpoint, String> {
-    let data = lcu_schema::get_endpoint(name, state).await;
-    data.map_err(|e| e.message)
+    let data = lcu_schema::get_endpoint(name, state).await?;
+    Ok(data)
 }
 
 #[tauri::command]
 pub async fn get_schema(name: &str, state: State<'_, Data>) -> Result<PluginSchema, String> {
-    let data = lcu_schema::get_schema(name, state).await;
-    data.map_err(|e| e.message)
+    let data = lcu_schema::get_schema(name, state).await?;
+    Ok(data)
 }
 
 #[tauri::command]
 pub async fn get_schemas(state: State<'_, Data>) -> Result<HashMap<String, PluginSchema>, String> {
-    let data = lcu_schema::get_schemas(state).await;
-    data.map_err(|e| e.message)
+    let data = lcu_schema::get_schemas(state).await?;
+    Ok(data)
 }
 
 #[tauri::command]
@@ -49,8 +50,8 @@ pub async fn send_request(
     path: &str,
     body: Option<&str>,
 ) -> Result<Option<Value>, String> {
-    let data = lcu::send_request(method, path, body).await;
-    data.map_err(|e| e.message)
+    let data = lcu::send_request(method, path, body).await?;
+    Ok(data)
 }
 
 #[tauri::command]
@@ -70,16 +71,12 @@ pub async fn open_data_window(
     .build()
     .unwrap();
 
-    lcu::produce_payload(key, payload, state)
-        .await
-        .map_err(|e| e.message)
+    Ok(lcu::produce_payload(key, payload, state).await?)
 }
 
 #[tauri::command]
 pub async fn get_data_payload(key: &str, state: State<'_, Data>) -> Result<String, String> {
-    lcu::consume_payload(key, state)
-        .await
-        .map_err(|e| e.message)
+    Ok(lcu::consume_payload(key, state).await?)
 }
 
 #[tauri::command]

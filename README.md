@@ -2,6 +2,8 @@
 
 Needlework is an open-source helper tool for the LCU that provides documented endpoints and can send requests without any code setup. Created using Nuxt and Tauri! 🌠
 
+## ℹ️ Try out the .NET rewrite, [Needlework.Net](https://github.com/BlossomiShymae/Needlework.Net) ℹ️
+
 ## Download
 
 [Needlework can be downloaded from the latest release! Currently for Windows only.](https://github.com/BlossomiShymae/Needlework/releases)
